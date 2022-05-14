@@ -1,0 +1,7 @@
+.logo {
+  aspect-ratio: 2/1;
+  background: url("../../../../public/logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}

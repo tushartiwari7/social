@@ -1,0 +1,15 @@
+.search-users {
+  width: 90%;
+  margin: 10px auto;
+  display: flex;
+}
+.search-users .ant-select-selector {
+  border-radius: 50px !important;
+}
+@media screen and (min-width: 768px) {
+  .meta-info {
+    /* ant design is using inline css so added !important to alter that */
+    width: 300px !important;
+    max-width: none !important;
+  }
+}
