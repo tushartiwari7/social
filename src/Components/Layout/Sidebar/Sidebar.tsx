@@ -14,7 +14,7 @@ import {
   BulbOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -22,8 +22,9 @@ type MenuItem = Required<MenuProps>["items"][number];
 export const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
   const handleCollapse = (collapsed: boolean) => {
-    console.log(collapsed);
     setCollapsed(collapsed);
   };
 
@@ -39,7 +40,7 @@ export const Sidebar: FC = () => {
       onClick: () => {
         if (key !== "sub1" && key !== "sub2") {
           console.log(label);
-          navigate(label);
+          navigate(label, { state: { from: location } });
         }
       },
       children,

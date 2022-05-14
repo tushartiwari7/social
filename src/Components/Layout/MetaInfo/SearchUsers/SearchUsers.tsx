@@ -18,7 +18,7 @@ export const SearchUsers: React.FC = () => {
   };
 
   const onSelect = (data: string) => {
-    console.log("onSelect", data);
+    // write logic for navigating to user profile
   };
 
   const onChange = (data: string) => {
