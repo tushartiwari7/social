@@ -5,3 +5,7 @@
   margin: 0 auto;
   height: 100vh;
 }
+main {
+  display: grid;
+  height: 100vh;
+}
