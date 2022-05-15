@@ -4,15 +4,20 @@ import { MetaInfo } from "./MetaInfo/MetaInfo";
 import { Layout } from "antd";
 import "./AppLayout.css";
 import { Route, Routes } from "react-router-dom";
+import { Header } from "Components/Header/Header";
+import { Feed } from "Pages";
 export const AppLayout: FC = () => {
   return (
     <Layout className="layout">
       <Sidebar />
-      <Routes>
-        <Route path="/" element={<main>Hello frnds</main>} />
-        <Route path="/home" element={<main>Hello frnds homepage</main>} />
-        <Route path="*" element={<main>404 error</main>} />
-      </Routes>
+      <main>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Feed />} />
+          <Route path="/home" element={<Feed />} />
+          <Route path="*" element={<main>404 error</main>} />
+        </Routes>
+      </main>
       <MetaInfo />
     </Layout>
   );
