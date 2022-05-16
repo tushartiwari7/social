@@ -1,0 +1,6 @@
+.tweet-page {
+  overflow-y: auto;
+}
+.tweet-page::-webkit-scrollbar {
+  width: 0px;
+}
