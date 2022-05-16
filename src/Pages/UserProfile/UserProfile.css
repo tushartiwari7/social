@@ -1,0 +1,43 @@
+.avatar-container {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  height: 100px;
+}
+.avatar-container img {
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 5px solid var(--bg-color);
+  position: absolute;
+}
+.btn-follow {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}
+
+.follow-info {
+  display: flex;
+  gap: 1rem;
+  color: var(--fg-color);
+}
+.follow-info > a {
+  color: var(--fg-color);
+  text-decoration-color: var(--bg-color);
+}
+
+.user-info {
+  padding-left: 2rem;
+}
+.user-profile {
+  overflow: auto;
+  scrollbar-width: 0;
+}
+.user-profile::-webkit-scrollbar {
+  width: 0;
+}

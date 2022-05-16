@@ -1,7 +1,6 @@
 import { useState, FC, ReactNode, Key } from "react";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import "./Sidebar.css";
 import {
   BorderlessTableOutlined,
   HomeOutlined,
@@ -71,7 +70,6 @@ export const Sidebar: FC = () => {
       onCollapse={handleCollapse}
       breakpoint="md"
     >
-      <div className="logo" />
       <Menu
         theme="dark"
         defaultSelectedKeys={["1"]}

@@ -5,7 +5,7 @@ import { Layout } from "antd";
 import "./AppLayout.css";
 import { Route, Routes } from "react-router-dom";
 import { Header } from "Components/Header/Header";
-import { Feed } from "Pages";
+import { Connections, Feed, Tweet, UserProfile } from "Pages";
 export const AppLayout: FC = () => {
   return (
     <Layout className="layout">
@@ -13,9 +13,14 @@ export const AppLayout: FC = () => {
       <main>
         <Header />
         <Routes>
-          <Route path="/" element={<Feed />} />
+          <Route path="" element={<Feed />} />
           <Route path="/home" element={<Feed />} />
-          <Route path="*" element={<main>404 error</main>} />
+          <Route path="/u/:userName">
+            <Route index element={<UserProfile />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="tweet/:tweetId" element={<Tweet />} />
+          </Route>
+          <Route path="*" element={<h1>404page</h1>} />
         </Routes>
       </main>
       <MetaInfo />
