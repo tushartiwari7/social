@@ -1,5 +1,5 @@
 .layout {
-  display: grid;
+  display: grid !important;
   grid-template-columns: auto 1fr auto;
   max-width: 1200px;
   margin: 0 auto;
