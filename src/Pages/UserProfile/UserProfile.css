@@ -15,7 +15,7 @@
   border: 5px solid var(--bg-color);
   position: absolute;
 }
-.btn-follow {
+button.btn-follow {
   position: absolute;
   right: 10px;
   bottom: 0;

@@ -1,14 +1,29 @@
-import { Button, Checkbox, Form, Input, Typography } from "antd";
-import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Button, Checkbox, Form, Input, Typography, message } from "antd";
+import { FC, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "Redux/authSlice";
 import "./Login.css";
+
 export const Login: FC = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    const resp = await dispatch(login(values));
+    console.log({ resp });
+    if (resp.error?.message === "Rejected") {
+      message.error(resp.payload);
+    } else {
+      navigate("/");
+      message.success("Logged in successfully");
+    }
+    setLoading(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log("Failed", errorInfo);
   };
 
   return (
@@ -19,35 +34,37 @@ export const Login: FC = () => {
         </div>
         <Form
           name="login-form"
-          initialValues={{ remember: true }}
+          initialValues={{
+            remember: true,
+            email: process.env.REACT_APP_GUEST_MAIL,
+            password: process.env.REACT_APP_GUEST_PASSWORD,
+          }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
           <p className="form-title">Welcome back</p>
           <p>Login to the Dashboard</p>
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            name="email"
+            rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input placeholder="Username" />
+            <Input type="email" placeholder="Email Address" />
           </Form.Item>
-
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password placeholder="Password" />
           </Form.Item>
-
           <Form.Item name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              loading={loading}
             >
               LOGIN
             </Button>
