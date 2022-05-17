@@ -1,10 +1,26 @@
-import { Button, Checkbox, Form, Input, Typography } from "antd";
-import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Button, Checkbox, Form, Input, message, Typography } from "antd";
+import { FC, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { signup } from "Redux/authSlice";
 import "./Signup.css";
 export const Signup: FC = () => {
-  const onFinish = (values: any) => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onFinish = async (values: any) => {
+    setLoading(true);
     console.log("Success:", values);
+    const resp = await dispatch(signup(values));
+    console.log({ resp });
+    if (resp.error?.message === "Rejected") {
+      message.error(resp.payload);
+    } else {
+      message.success("Signup successfully");
+      navigate("/");
+    }
+    setLoading(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -29,18 +45,18 @@ export const Signup: FC = () => {
             name="username"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input placeholder="Username" />
+            <Input type="text" placeholder="Username" />
           </Form.Item>
 
           <Form.Item
-            name="mail"
+            name="email"
             rules={[{ required: true, message: "Please enter a valid mail" }]}
           >
             <Input type="email" placeholder="E-Mail" />
           </Form.Item>
           <Form.Item
-            name="fullname"
-            rules={[{ required: true, message: "Please enter a valid mail" }]}
+            name="name"
+            rules={[{ required: true, message: "Please enter your Full Name" }]}
           >
             <Input type="text" placeholder="Name" />
           </Form.Item>
@@ -61,6 +77,7 @@ export const Signup: FC = () => {
               type="primary"
               htmlType="submit"
               className="signup-form-button"
+              loading={loading}
             >
               signup
             </Button>
