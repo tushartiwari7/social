@@ -16,7 +16,7 @@ type tweetType = {
 
 const tweets: tweetType[] = [
   {
-    userName: "tushartiwari7",
+    userName: "tushartiwari",
     tweetId: "e3e4ed34233s12xd",
     avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
     name: "Tushar Tiwari",

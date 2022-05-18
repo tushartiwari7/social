@@ -38,7 +38,6 @@ export const Sidebar: FC = () => {
       icon,
       onClick: () => {
         if (key !== "sub1" && key !== "sub2") {
-          console.log(label);
           navigate(label, { state: { from: location } });
         }
       },

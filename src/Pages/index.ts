@@ -4,3 +4,4 @@ export {Connections} from './UserProfile/Connections/Connections';
 export {Tweet} from './UserProfile/Tweet/Tweet';
 export {Login} from './Login/Login';
 export {Signup} from './Signup/Signup';
+export {Redirects} from './Redirects/Redirects';
