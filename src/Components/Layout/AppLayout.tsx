@@ -5,7 +5,7 @@ import { Layout } from "antd";
 import "./AppLayout.css";
 import { Route, Routes } from "react-router-dom";
 import { Header } from "Components/Header/Header";
-import { Connections, Feed, Tweet, UserProfile } from "Pages";
+import { Connections, Feed, Redirects, Tweet, UserProfile } from "Pages";
 export const AppLayout: FC = () => {
   return (
     <Layout className="layout">
@@ -15,6 +15,10 @@ export const AppLayout: FC = () => {
         <Routes>
           <Route path="" element={<Feed />} />
           <Route path="/home" element={<Feed />} />
+          <Route path="/profile" element={<Redirects />} />
+          <Route path="/followers" element={<Redirects />} />
+          <Route path="/followings" element={<Redirects />} />
+          <Route path="/logout" element={<Redirects />} />
           <Route path="/u/:userName">
             <Route index element={<UserProfile />} />
             <Route path="connections" element={<Connections />} />

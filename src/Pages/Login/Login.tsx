@@ -1,25 +1,26 @@
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
+import { login } from "app/features";
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "Redux/authSlice";
 import "./Login.css";
 
 export const Login: FC = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const onFinish = async (values: any) => {
     setLoading(true);
     const resp = await dispatch(login(values));
-    console.log({ resp });
+    setLoading(false);
     if (resp.error?.message === "Rejected") {
       message.error(resp.payload);
     } else {
+      console.log(resp);
       navigate("/");
       message.success("Logged in successfully");
     }
-    setLoading(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {

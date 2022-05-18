@@ -2,7 +2,7 @@ import { Button, Checkbox, Form, Input, message, Typography } from "antd";
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "Redux/authSlice";
+import { signup } from "app/features";
 import "./Signup.css";
 export const Signup: FC = () => {
   const [loading, setLoading] = useState(false);

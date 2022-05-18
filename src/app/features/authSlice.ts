@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { axiosConfig } from "./utils";
+import { axiosConfig } from "../utils";
 
 const initialState = {
   user: {},
@@ -13,6 +13,21 @@ export const login:any = createAsyncThunk("auth/login", async (userData:any,thun
 	try {
 		const {data}:any = await axios.post("/login", userData,axiosConfig);
 		if(data.success) {
+			localStorage.setItem("token", data.token);
+			return data.user;
+		}
+	} catch (error: any) {
+		console.error({error});
+		return thunkAPI.rejectWithValue(error.response.data.message);
+	}
+});
+	
+export const signup:any = createAsyncThunk("auth/signup", async (userData:any,thunkAPI:any) => {
+	try {
+		console.log({userData});
+		const {data}:any = await axios.post("/signup", userData,axiosConfig);
+		if(data.success){
+			localStorage.setItem("token", data.token);
 			return data.user;
 		}
 	} catch (error: any) {
@@ -21,22 +36,26 @@ export const login:any = createAsyncThunk("auth/login", async (userData:any,thun
 	}
 });
 
-export const signup:any = createAsyncThunk("/signup", async (userData:any,thunkAPI:any) => {
+export const getUser:any = createAsyncThunk("auth/getUser", async () => {
 	try {
-		console.log({userData});
-		const {data}:any = await axios.post("/signup", userData,axiosConfig);
-		if(data.success)
+		const {data}:any = await axios.get("/user/profile",axiosConfig);
+		if(data.success){
+			console.log({data});
 			return data.user;
+		}
 	} catch (error: any) {
 		console.error({error});
-		return thunkAPI.rejectWithValue(error.response.data.message);
+		return Promise.reject(error.response.data.message);
 	}
-
 });
+
+
 export const authState = createSlice({
   name: "auth",
   initialState,
-	reducers: {},
+	reducers: {
+		logout: ()=>initialState,
+	},
 	extraReducers: {
 		[login.fulfilled]: (state: any, action: any) => {
       state.user = action.payload;
@@ -61,4 +80,5 @@ export const authState = createSlice({
 	}	
 });
 
+export const {logout} = authState.actions;
 export default authState.reducer; // exports extraReducers{}

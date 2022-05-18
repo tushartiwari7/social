@@ -1,42 +1,28 @@
-import { FC } from "react";
 import { List, Avatar, Switch } from "antd";
 import { Link } from "react-router-dom";
 
-const data = [
-  {
-    name: "Jantu Deb",
-    userName: "jantudeb",
-  },
-  {
-    name: "Mariya Sada",
-    userName: "mariyasada",
-  },
-  {
-    name: "Bhakti Kharatkar",
-    userName: "bhaktee",
-  },
-  {
-    name: "Ritik Kapoor",
-    userName: "rkap10",
-  },
-];
-
-export const Followers: FC = () => (
+export const Followers = ({ list }: any) => (
   <List
     itemLayout="horizontal"
-    dataSource={data}
+    dataSource={list}
     style={{
       border: "1px solid var(--bg-color)",
       borderRadius: "15px",
       margin: "0 5px",
       padding: "1rem",
     }}
-    renderItem={(item) => (
+    renderItem={(item: any) => (
       <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-          title={<Link to={`/u/${item.userName}`}>{item.name}</Link>}
-          description={`@${item.userName}`}
+          avatar={
+            <Avatar
+              src={
+                item?.photo?.secure_url ?? "https://joeschmoe.io/api/v1/random"
+              }
+            />
+          }
+          title={<Link to={`/u/${item.username}`}>{item.name}</Link>}
+          description={`@${item.username}`}
         />
         <Switch
           checkedChildren="Following"
