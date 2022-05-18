@@ -49,6 +49,18 @@ export const getUser:any = createAsyncThunk("auth/getUser", async () => {
 	}
 });
 
+export const updateUser:any = createAsyncThunk("auth/updateUser", async (userData:any,thunkAPI:any) => {
+	try {
+		const {data}:any = await axios.post("/user/update_user_details", userData,axiosConfig);
+		if(data.success){
+			return data.user;
+		}
+	} catch (error: any) {
+		console.error({error});
+		return thunkAPI.rejectWithValue(error.response.data.message);
+	}
+}
+);
 
 export const authState = createSlice({
   name: "auth",
@@ -75,6 +87,15 @@ export const authState = createSlice({
 		[signup.rejected]: (state: any, action: any) => {
 			state.user = {};
 			state.isLoggedIn = false;
+			state.loginError = action.payload;
+		},
+		[updateUser.fulfilled]: (state: any, action: any) => {
+			console.log({action});
+			
+			state.user = action.payload;
+			state.loginStatus = "succeeded";
+		},
+		[updateUser.rejected]: (state: any, action: any) => {
 			state.loginError = action.payload;
 		}
 	}	

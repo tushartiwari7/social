@@ -1,21 +1,27 @@
 import { Button, Divider, Typography } from "antd";
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import "./UserProfile.css";
 import { UserTweets } from "./UserTweets/UserTweets";
+import { EditUserModal } from "./EditUserModal/EditUserModal";
+
 const { Title } = Typography;
 
 export const UserProfile: FC = () => {
   const location: any = useLocation();
   const ref = useRef(null);
   const { pathname } = location;
-
+  const [visible, setVisible] = useState(false);
+  const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
-  const user = users.find(
+  let user = users.find(
     (user: any) => user.username === pathname.split("/")[2]
   );
-
+  const isAdmin = user?.username === auth.user.username;
+  if(isAdmin)
+    user = auth.user;
+    
   useEffect(() => {
     const current: any = ref.current;
     current?.scrollTo(0, 0);
@@ -30,9 +36,14 @@ export const UserProfile: FC = () => {
           className="avatar"
           alt="user"
         />
-        <Button className="btn-follow" type="primary">
-          Follow
+        <Button
+          className="btn-follow"
+          type="primary"
+          onClick={isAdmin ? () => setVisible((v) => !v) : () => {}}
+        >
+          {isAdmin ? "Edit Profile" : "Follow"}
         </Button>
+        <EditUserModal visible={visible} setVisible={setVisible} user={user} />
       </div>
       <div className="user-info">
         <Title level={4}>{user?.name}</Title>
