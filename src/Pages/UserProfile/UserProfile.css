@@ -6,7 +6,7 @@
   position: relative;
   height: 100px;
 }
-.avatar-container img {
+.avatar {
   margin: auto;
   width: 200px;
   height: 200px;
@@ -15,6 +15,27 @@
   border: 5px solid var(--bg-color);
   position: absolute;
 }
+.avatar-edit {
+  width: 150px;
+  height: 150px;
+  transition: 0.25s linear;
+  filter: brightness(0.5);
+  cursor: pointer;
+}
+span.avatar-upload {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-upload .ant-upload {
+  transform: translateY(-50%);
+  backdrop-filter: brightness(0.5) blur(10px);
+}
+span.ant-upload {
+  top: 50%;
+  position: relative;
+}
+
 button.btn-follow {
   position: absolute;
   right: 10px;
@@ -40,4 +61,7 @@ button.btn-follow {
 }
 .user-profile::-webkit-scrollbar {
   width: 0;
+}
+.select-after {
+  min-width: 80px;
 }
