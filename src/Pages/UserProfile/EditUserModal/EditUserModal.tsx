@@ -47,8 +47,7 @@ export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
     userInputArr.forEach(([key, value]) => {
       formData.append(key, value);
     });
-    const resp = await dispatch(updateUser(formData));
-    console.log(resp);
+    await dispatch(updateUser(formData));
     setLoading(false);
     setVisible(false);
   };
@@ -60,8 +59,13 @@ export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
       onOk={onFinish}
       confirmLoading={loading}
       onCancel={() => setVisible((v: boolean) => !v)}
+      okText="Save Changes"
     >
-      <img src="https://picsum.photos/400/100" width="100%" alt="user" />
+      <img
+        src={`${window.location.origin}/userBanner.svg`}
+        width="100%"
+        alt="user"
+      />
       <div className="avatar-container">
         <Upload
           name="avatar"

@@ -70,8 +70,6 @@ const Editor = ({ submitting, setComments }: editorType) => {
       const values = await form.validateFields();
 
       setTimeout(() => {
-        console.log("settimeout:", values["comment-input"]);
-
         setComments((state: any) => ({
           submitting: false,
           value: "",

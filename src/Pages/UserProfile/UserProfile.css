@@ -37,7 +37,7 @@ span.ant-upload {
 }
 
 button.btn-follow {
-  position: absolute;
+  position: absolute !important;
   right: 10px;
   bottom: 0;
 }

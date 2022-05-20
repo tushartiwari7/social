@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
-import { login } from "app/features";
+import { getAllUsers, login } from "app/features";
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,14 +17,14 @@ export const Login: FC = () => {
     if (resp.error?.message === "Rejected") {
       message.error(resp.payload);
     } else {
-      console.log(resp);
+      await dispatch(getAllUsers());
       navigate("/");
       message.success("Logged in successfully");
     }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed", errorInfo);
+    message.error("Failed", errorInfo);
   };
 
   return (

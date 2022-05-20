@@ -17,10 +17,10 @@ export const Connections: FC = () => {
     <div>
       <Tabs defaultActiveKey={defaultTab} centered>
         <Tabs.TabPane tab="Followers" key="followers">
-          <Followers list={user.followers} />
+          <Followers userId={user?._id} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Followings" key="followings">
-          <Followings list={user.followings} />
+          <Followings userId={user?._id} />
         </Tabs.TabPane>
       </Tabs>
       <Outlet />

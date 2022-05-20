@@ -1,16 +1,16 @@
-import { FC } from "react";
-import { List, Avatar, Divider, Switch } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { List, Divider } from "antd";
 import { useSelector } from "react-redux";
+import { UserCard } from "Components";
 
-export const Suggestions: FC = () => {
+export const Suggestions = () => {
   const auth = useSelector((state: any) => state.auth);
-  const users = useSelector((state: any) => state.users).filter(
-    (user: any) =>
-      user.username !== auth.user.username || // if athe authenticated user and this user are same
-      user.followers.some((u: string) => u === auth.user.username) // if this user follows authenticated user already.
-  );
-  const location = useLocation();
+  const allUsers = useSelector((state: any) => state.users);
+  const users = allUsers
+    ?.filter(
+      //if user is not following
+      (user: any) => !(auth?.user?._id === user?._id)
+    )
+    .slice(0, 7);
   return (
     <>
       <Divider orientation="left">Who To Follow? </Divider>
@@ -23,24 +23,7 @@ export const Suggestions: FC = () => {
           margin: "0 5px",
           padding: "1rem",
         }}
-        renderItem={(item: any) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-              title={
-                <Link to={`/u/${item.username}`} state={{ from: location }}>
-                  {item.name}
-                </Link>
-              }
-              description={`@${item.username}`}
-            />
-            <Switch
-              checkedChildren="Following"
-              unCheckedChildren="Follow"
-              defaultChecked={false}
-            ></Switch>
-          </List.Item>
-        )}
+        renderItem={(item: any) => <UserCard person={item} />}
       />
     </>
   );
