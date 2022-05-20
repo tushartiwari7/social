@@ -1,9 +1,14 @@
 export const axiosConfig = {
-  baseURL: "https://social-app-twitter.herokuapp.com/api/v1",
+  baseURL: window.location.hostname === "loclhost"? "http://localhost:4000/api/v1":"https://social-app-twitter.herokuapp.com/api/v1",
   headers: {
-    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+    'Authorization': 'Bearer ' + sessionStorage.getItem("token"),
     'Content-Type': 'application/json'
   }
 };
 
-export const log = (msg:any)=>console.log(msg);
+export const axiosConfigWithoutHeader = {
+  baseURL: window.location.hostname === "loalhost"? "http://localhost:4000/api/v1":"https://social-app-twitter.herokuapp.com/api/v1",
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};

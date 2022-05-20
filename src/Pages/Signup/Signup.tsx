@@ -11,9 +11,7 @@ export const Signup: FC = () => {
 
   const onFinish = async (values: any) => {
     setLoading(true);
-    console.log("Success:", values);
     const resp = await dispatch(signup(values));
-    console.log({ resp });
     if (resp.error?.message === "Rejected") {
       message.error(resp.payload);
     } else {
@@ -24,7 +22,7 @@ export const Signup: FC = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    message.error("Failed:", errorInfo);
   };
 
   return (

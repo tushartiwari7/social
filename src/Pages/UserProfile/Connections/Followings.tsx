@@ -1,35 +1,34 @@
-import { List, Avatar, Switch } from "antd";
-import { Link } from "react-router-dom";
+import { List } from "antd";
+import { getFollowings } from "app/features";
+import { UserCard } from "Components";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-export const Followings = ({ list }: any) => (
-  <List
-    itemLayout="horizontal"
-    dataSource={list}
-    style={{
-      border: "1px solid var(--bg-color)",
-      borderRadius: "15px",
-      margin: "0 5px",
-      padding: "1rem",
-    }}
-    renderItem={(item: any) => (
-      <List.Item>
-        <List.Item.Meta
-          avatar={
-            <Avatar
-              src={
-                item?.photo?.secure_url ?? "https://joeschmoe.io/api/v1/random"
-              }
-            />
-          }
-          title={<Link to={`/u/${item.username}`}>{item.name}</Link>}
-          description={`@${item.username}`}
-        />
-        <Switch
-          checkedChildren="Following"
-          unCheckedChildren="Follow"
-          defaultChecked
-        ></Switch>
-      </List.Item>
-    )}
-  />
-);
+type props = {
+  userId: string;
+};
+export const Followings = ({ userId }: props) => {
+  const [list, setList] = useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+      const resp = await dispatch(getFollowings(userId));
+      setList(resp.payload);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <List
+      itemLayout="horizontal"
+      dataSource={list}
+      style={{
+        border: "1px solid var(--bg-color)",
+        borderRadius: "15px",
+        margin: "0 5px",
+        padding: "1rem",
+      }}
+      renderItem={(item: any) => <UserCard person={item} />}
+    />
+  );
+};
