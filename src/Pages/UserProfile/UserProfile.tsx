@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { UserTweets } from "./UserTweets/UserTweets";
 import { EditUserModal } from "./EditUserModal/EditUserModal";
-import { followUser, unfollowUser } from "app/features";
+import { followUser, getUserTweets, unfollowUser } from "app/features";
 import { EnvironmentOutlined, PaperClipOutlined } from "@ant-design/icons";
 import "./UserProfile.css";
 const { Title } = Typography;
@@ -18,8 +18,10 @@ export const UserProfile: FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
   const dispatch = useDispatch();
-  let user = users.find(
-    (user: any) => user.username === pathname.split("/")[2]
+  let user = users.find((user: any) =>
+    pathname.split("/")[2].length < 15
+      ? user.username === pathname.split("/")[2]
+      : user._id === pathname.split("/")[2]
   );
 
   const isAdmin = user?.username === auth.user.username;
@@ -42,6 +44,12 @@ export const UserProfile: FC = () => {
   useEffect(() => {
     const current: any = ref.current;
     current.scrollTo(0, 0);
+
+    // getUserTweets
+    (async () => {
+      await dispatch(getUserTweets(user?._id));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return (

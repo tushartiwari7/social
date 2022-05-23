@@ -16,21 +16,13 @@ const IconText = ({ Icon, text, onClick }: iconType) => (
   </Space>
 );
 
-type tweetType = {
-  tweetId: string;
-  userName: string;
-  avatar: string;
-  name: string;
-  content: string;
-  image?: string;
-};
-
-export const ListItem = (item: tweetType) => {
+export const ListItem = (item: any) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   return (
     <List.Item
-      key={item.name}
+      key={item._id}
       actions={[
         <IconText
           Icon={StarOutlined}
@@ -60,30 +52,31 @@ export const ListItem = (item: tweetType) => {
         />,
       ]}
       extra={
-        item.image && (
+        item.image?.url && (
           <img
             className="tweet-attached-img"
             width={272}
             alt="logo"
-            src={item.image}
+            src={item.image.url}
           />
         )
       }
       onClick={() => {
-        navigate(`/u/${item.userName}/tweet/${item.tweetId}`, {
+        console.log(item);
+        navigate(`/u/${item.user._id}/tweet/${item._id}`, {
           state: { from: location },
         });
       }}
     >
       <List.Item.Meta
-        avatar={<Avatar src={item.avatar} />}
+        avatar={<Avatar src={item.user.photo.secure_url} />}
         title={
-          <Link to={`/u/${item.userName}`} onClick={(e) => e.stopPropagation()}>
-            {item.name}
+          <Link to={`/u/${item.user._id}`} onClick={(e) => e.stopPropagation()}>
+            {item.user.name}
           </Link>
         }
       />
-      {item.content}
+      {item.description}
     </List.Item>
   );
 };
