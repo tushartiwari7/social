@@ -1,4 +1,5 @@
 .tweet-attached-img {
   aspect-ratio: 3/2;
   object-fit: contain;
+  max-height: 112px;
 }

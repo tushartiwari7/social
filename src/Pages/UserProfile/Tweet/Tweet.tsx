@@ -1,15 +1,10 @@
 import { Comment, Avatar, Form, Button, Divider, List, Mentions } from "antd";
+import { getSingleTweet } from "app/features";
 import { ListItem } from "Components";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import "./Tweet.css";
-type tweetType = {
-  tweetId: string;
-  userName: string;
-  avatar: string;
-  name: string;
-  content: string;
-  image?: string;
-};
 
 type commentState = {
   comments: any;
@@ -26,17 +21,6 @@ type editorType = {
 const MOCK_DATA: any = {
   "@": ["tanaypratap", "akshaymarch7", "bhakti199", "rkap10"],
   "#": ["javascript", "reactjs", "typescript"],
-};
-
-const tweetData: tweetType = {
-  userName: "jantudeb",
-  tweetId: "23edfwtju7",
-  avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-  name: "Jantu Deb",
-  image:
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-  content:
-    "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
 };
 
 type commentList = {
@@ -128,8 +112,19 @@ export const Tweet: FC = () => {
     submitting: false,
     value: "",
   };
-
+  const location = useLocation();
+  const tweetId = location.pathname.split("/").pop();
+  const auth = useSelector((state: any) => state.auth);
   const [state, setState] = useState(initialState);
+  const tweet = useSelector((state: any) => state.tweets.singleTweet);
+  const loading: boolean = useSelector((state: any) => state.tweets.loading);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+      await dispatch(getSingleTweet(tweetId));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tweetId]);
 
   return (
     <div className="tweet-page">
@@ -139,17 +134,16 @@ export const Tweet: FC = () => {
         size="large"
         className="tweet-list"
         style={{ overflow: "auto", flexGrow: 1 }}
-        dataSource={[tweetData]}
-        renderItem={(item) => <ListItem {...item} />}
+        dataSource={[tweet]}
+        loading={loading}
+        renderItem={(item) => item._id && <ListItem {...item} />}
       ></List>
       <Divider orientation="left">
         Recent Comments ({state.comments.length})
       </Divider>
       {state.comments.length > 0 && <CommentList comments={state.comments} />}
       <Comment
-        avatar={
-          <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-        }
+        avatar={<Avatar src={auth.user?.photo.secure_url} alt="Han Solo" />}
         content={
           <Editor
             submitting={state.submitting}
