@@ -9,18 +9,18 @@ export const Connections: FC = () => {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const defaultTab = searchParams.get("default") || "followers";
-  const username = pathname.split("/")[2];
+  const user = pathname.split("/")[2];
   const users = useSelector((state: any) => state.users);
-  const user = users.find((user: any) => user.username === username);
+  const userDb = users.find((singleUser: any) => singleUser.username === user);
 
   return (
     <div>
       <Tabs defaultActiveKey={defaultTab} centered>
         <Tabs.TabPane tab="Followers" key="followers">
-          <Followers userId={user?._id} />
+          <Followers userId={user.length > 15 ? user : userDb?._id} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Followings" key="followings">
-          <Followings userId={user?._id} />
+          <Followings userId={user.length > 15 ? user : userDb?._id} />
         </Tabs.TabPane>
       </Tabs>
       <Outlet />

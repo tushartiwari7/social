@@ -1,8 +1,15 @@
 import { Avatar, List, Space } from "antd";
-import { StarOutlined, LikeOutlined, MessageOutlined } from "@ant-design/icons";
+import {
+  StarOutlined,
+  LikeOutlined,
+  MessageOutlined,
+  LikeFilled,
+} from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FC } from "react";
 import "./ListItem.css";
+import { useDispatch, useSelector } from "react-redux";
+import { dislikeTweet, likeTweet } from "app/features";
 type iconType = {
   Icon: FC;
   text: number;
@@ -16,17 +23,30 @@ const IconText = ({ Icon, text, onClick }: iconType) => (
   </Space>
 );
 
-export const ListItem = (item: any) => {
+export const ListItem = (tweet: any) => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const dispatch = useDispatch();
+  const authUser = useSelector((state: any) => state.auth.user);
+  const isLiked = tweet.likes.includes(authUser._id);
   return (
     <List.Item
-      key={item._id}
+      key={tweet._id}
       actions={[
         <IconText
+          Icon={isLiked ? LikeFilled : LikeOutlined}
+          text={tweet.statistics.likeCount}
+          key="list-vertical-like-o"
+          onClick={async (e) => {
+            e.stopPropagation();
+            debugger;
+            if (isLiked) await dispatch(dislikeTweet(tweet._id));
+            else await dispatch(likeTweet(tweet._id));
+          }}
+        />,
+        <IconText
           Icon={StarOutlined}
-          text={156}
+          text={tweet.statistics.favoriteCount}
           key="list-vertical-star-o"
           onClick={(e) => {
             e.stopPropagation();
@@ -34,17 +54,8 @@ export const ListItem = (item: any) => {
           }}
         />,
         <IconText
-          Icon={LikeOutlined}
-          text={56}
-          key="list-vertical-like-o"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("like");
-          }}
-        />,
-        <IconText
           Icon={MessageOutlined}
-          text={21}
+          text={tweet.statistics.commentCount}
           key="list-vertical-message"
           onClick={() => {
             console.log("comment");
@@ -52,31 +63,34 @@ export const ListItem = (item: any) => {
         />,
       ]}
       extra={
-        item.image?.url && (
+        tweet.image?.url && (
           <img
             className="tweet-attached-img"
             width={272}
             alt="logo"
-            src={item.image.url}
+            src={tweet.image.url}
           />
         )
       }
       onClick={() => {
-        console.log(item);
-        navigate(`/u/${item.user._id}/tweet/${item._id}`, {
+        console.log(tweet);
+        navigate(`/u/${tweet.user._id}/tweet/${tweet._id}`, {
           state: { from: location },
         });
       }}
     >
       <List.Item.Meta
-        avatar={<Avatar src={item.user.photo.secure_url} />}
+        avatar={<Avatar src={tweet.user.photo.secure_url} />}
         title={
-          <Link to={`/u/${item.user._id}`} onClick={(e) => e.stopPropagation()}>
-            {item.user.name}
+          <Link
+            to={`/u/${tweet.user._id}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {tweet.user.name}
           </Link>
         }
       />
-      {item.description}
+      {tweet.description}
     </List.Item>
   );
 };
