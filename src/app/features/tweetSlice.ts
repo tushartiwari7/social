@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
 const initialState = {
 	feedTweets: [],
 	allTweets: [],
@@ -7,7 +8,7 @@ const initialState = {
 	singleTweet: {},
 	loading: false,
 	error: ""
-}
+};
 
 export const postTweet:any = createAsyncThunk("tweet/post", async (tweet:any, { rejectWithValue }) => {
 	try {
@@ -32,7 +33,7 @@ export const getUserTweets:any = createAsyncThunk(
   "tweet/getUserTweets",
   async (userId: string,{rejectWithValue}) => {
     try {
-      const { data } = await axios.get("http://social-app-twitter.herokuapp.com/api/v1/tweets/userTweets/" + userId, {
+      const { data } = await axios.get("https://social-app-twitter.herokuapp.com/api/v1/tweets/userTweets/" + userId, {
 				headers: {
 					Authorization: `Bearer ${sessionStorage.getItem("token")}`,
 					"Content-Type": "application/json",
@@ -161,6 +162,7 @@ export const tweetSlice = createSlice({
 		},
 		[likeTweet.fulfilled]: (state:any, action) => {
 			console.log(action.payload);
+			
 			state.feedTweets = state.feedTweets.map((tweet:any) => {
 				if(tweet._id === action.payload._id){
 					return action.payload;
@@ -239,7 +241,7 @@ export const tweetSlice = createSlice({
 		[dislikeTweet.rejected]: (state:any, action) => {
 			state.error = action.payload;
 			state.loading = false;
-		}
+		},
 	},
 })
 

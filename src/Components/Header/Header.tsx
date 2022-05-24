@@ -7,7 +7,7 @@ export const Header: FC = () => {
   const navigate = useNavigate();
   const path: string = location.pathname;
   const urlParams: string[] = path.split("/");
-  const source = urlParams.pop() ?? "";
+  const source = urlParams[urlParams.length - 1] ?? "";
 
   const users = useSelector((state: any) => state.users);
   const user =
@@ -19,7 +19,7 @@ export const Header: FC = () => {
     if (urlParams.length > 3 && urlParams.includes("tweet")) {
       return "Tweet";
     } else {
-      return user?.name ?? "Home";
+      return user?.name ?? urlParams[urlParams.length - 1];
     }
   };
 

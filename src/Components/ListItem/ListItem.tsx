@@ -1,15 +1,21 @@
-import { Avatar, List, Space } from "antd";
+import { Avatar, List, message, Space } from "antd";
 import {
   StarOutlined,
   LikeOutlined,
   MessageOutlined,
   LikeFilled,
+  StarFilled,
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FC } from "react";
 import "./ListItem.css";
 import { useDispatch, useSelector } from "react-redux";
-import { dislikeTweet, likeTweet } from "app/features";
+import {
+  bookmarkTweet,
+  dislikeTweet,
+  likeTweet,
+  removeBookmark,
+} from "app/features";
 type iconType = {
   Icon: FC;
   text: number;
@@ -28,7 +34,11 @@ export const ListItem = (tweet: any) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const authUser = useSelector((state: any) => state.auth.user);
+  const bookmarks = useSelector((state: any) => state.bookmarks);
   const isLiked = tweet.likes.includes(authUser._id);
+  const isBookmarked = bookmarks.some(
+    (item: any) => item.post._id === tweet._id
+  );
   return (
     <List.Item
       key={tweet._id}
@@ -39,20 +49,32 @@ export const ListItem = (tweet: any) => {
           key="list-vertical-like-o"
           onClick={async (e) => {
             e.stopPropagation();
-            debugger;
             if (isLiked) await dispatch(dislikeTweet(tweet._id));
             else await dispatch(likeTweet(tweet._id));
+            if (isLiked) message.success("Like Removed");
+            else message.success("Liked Tweet");
           }}
         />,
-        <IconText
-          Icon={StarOutlined}
-          text={tweet.statistics.favoriteCount}
-          key="list-vertical-star-o"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("bookmark");
-          }}
-        />,
+        <>
+          {isBookmarked ? (
+            <StarFilled
+              onClick={async (e) => {
+                e.stopPropagation();
+                await dispatch(removeBookmark(tweet._id));
+                message.success("Tweet Removed from Bookmarks");
+              }}
+            />
+          ) : (
+            <StarOutlined
+              onClick={async (e) => {
+                e.stopPropagation();
+                await dispatch(bookmarkTweet(tweet._id));
+                message.success("Tweet Added to Bookmarks");
+              }}
+            />
+          )}
+        </>,
+
         <IconText
           Icon={MessageOutlined}
           text={tweet.statistics.commentCount}
@@ -80,7 +102,7 @@ export const ListItem = (tweet: any) => {
       }}
     >
       <List.Item.Meta
-        avatar={<Avatar src={tweet.user.photo.secure_url} />}
+        avatar={<Avatar src={tweet.user.photo?.secure_url} />}
         title={
           <Link
             to={`/u/${tweet.user._id}`}

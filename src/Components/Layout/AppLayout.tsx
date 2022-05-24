@@ -2,10 +2,18 @@ import { FC } from "react";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { MetaInfo } from "./MetaInfo/MetaInfo";
 import { Layout } from "antd";
-import "./AppLayout.css";
 import { Route, Routes } from "react-router-dom";
 import { Header } from "Components/Header/Header";
-import { Connections, Feed, Redirects, Tweet, UserProfile } from "Pages";
+import {
+  Bookmarks,
+  Connections,
+  Feed,
+  Redirects,
+  Tweet,
+  UserProfile,
+} from "Pages";
+import "./AppLayout.css";
+
 export const AppLayout: FC = () => {
   return (
     <Layout className="layout">
@@ -15,6 +23,7 @@ export const AppLayout: FC = () => {
         <Routes>
           <Route path="" element={<Feed />} />
           <Route path="/home" element={<Feed />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/profile" element={<Redirects />} />
           <Route path="/followers" element={<Redirects />} />
           <Route path="/followings" element={<Redirects />} />
