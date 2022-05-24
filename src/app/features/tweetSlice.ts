@@ -1,125 +1,17 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import { addComment, dislikeTweet, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
 	feedTweets: [],
 	allTweets: [],
 	userTweets: [],
 	singleTweet: {},
+	singleTweetComments: [],
 	loading: false,
+	commentsLoading: false,
 	error: ""
 };
 
-export const postTweet:any = createAsyncThunk("tweet/post", async (tweet:any, { rejectWithValue }) => {
-	try {
-		const {data} = await axios({
-			method: "post",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweets",
-			data: tweet,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		if(data.success){
-			return data.tweet;
-		}
-	} catch (error) {
-		return rejectWithValue(error);
-	}
-});
-
-export const getUserTweets:any = createAsyncThunk(
-  "tweet/getUserTweets",
-  async (userId: string,{rejectWithValue}) => {
-    try {
-      const { data } = await axios.get("https://social-app-twitter.herokuapp.com/api/v1/tweets/userTweets/" + userId, {
-				headers: {
-					Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-					"Content-Type": "application/json",
-				}
-			});
-
-			if (data.success) {
-				return data.tweets;
-			}
-	
-		} catch (error:any) {
-				return rejectWithValue(error.response.data.message);
-		}
-  }
-);
-
-export const getFeed:any = createAsyncThunk("tweet/feed", async (state,{rejectWithValue}) => {
-try {
-	const {data} = await axios({
-		method: "get",
-		url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/feed",
-		headers: {
-			Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-			"Content-Type": "application/json",
-		}
-	});
-	if(data.success)
-		return data.tweets;
-	throw new Error(data.message);
-} catch (error) {
-	return rejectWithValue(error);
-}
-});
-
-export const getSingleTweet:any = createAsyncThunk("tweet/single", async (tweetId:string,{rejectWithValue}) => {
-	try {
-		const {data} = await axios({
-			method: "get",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweets/" + tweetId,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		if(data.success)
-			return data.tweet;
-	} catch (error:any) {
-		return rejectWithValue(error.response.data.message);
-	}
-});
-
-export const likeTweet:any = createAsyncThunk("tweet/like", async (tweetId: string, {rejectWithValue}) => {
-	try {
-		const {data} = await axios({
-			method: "post",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		if(data.success)
-			return data.like.post;
-	} catch (error:any) {
-		return rejectWithValue(error.response.data.message);
-	}
-});
-
-export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId: string, {rejectWithValue}) => {
-	try {
-		const {data} = await axios({
-			method: "delete",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		console.log(data);
-		
-		if(data.success)
-			return data.like;
-	} catch (error:any) {
-		return rejectWithValue(error.response.data.message);
-	}
-});
 
 export const tweetSlice = createSlice({
 	name: "tweet",
@@ -242,6 +134,52 @@ export const tweetSlice = createSlice({
 			state.error = action.payload;
 			state.loading = false;
 		},
+		[addComment.fulfilled]: (state:any, action) => {
+			state.singleTweetComments.unshift(action.payload);
+			state.singleTweet.statistics.commentCount = state.singleTweet.statistics.commentCount + 1;
+			
+			state.feedTweets = state.feedTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
+					};
+				}
+				return tweet;
+			})
+
+			state.userTweets = state.userTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
+					};
+				}
+				return tweet;
+			});
+
+			state.allTweets = state.allTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
+					};
+				}
+				return tweet;
+			})
+
+			state.commentsLoading = false;
+		},
+		[addComment.pending]: (state:any) => {	
+			state.commentsLoading = true;
+		},
+		[getComments.fulfilled]: (state:any, action) => {
+			state.singleTweetComments = action.payload;
+			state.commentsLoading = false;
+		},
+		[getComments.pending]: (state:any) => {
+			state.commentsLoading = true;
+		}
 	},
 })
 
