@@ -1,4 +1,5 @@
 .tweet-page {
+  border-top: 2px solid var(--bg-secondary);
   overflow-y: auto;
 }
 .tweet-page::-webkit-scrollbar {

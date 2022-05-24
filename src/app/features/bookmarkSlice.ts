@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { dislikeTweet, likeTweet } from "./tweetSlice";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { dislikeTweet, likeTweet } from "./thunkApiCalls/tweetThunk";
 
 export const bookmarkTweet:any = createAsyncThunk("bookmark/add",async (tweetId:string,{rejectWithValue})=>{
 	try {
@@ -36,9 +36,8 @@ export const removeBookmark:any = createAsyncThunk("bookmark/remove",async (book
 	}
 });
 
-
 export const getBookmarks:any = createAsyncThunk(
-  "user/fetchBookmark",
+  "user/getBookmark",
   async () => {
     try {
       const { data } = await axios.get("https://social-app-twitter.herokuapp.com/api/v1/user/bookmarks",{
@@ -67,7 +66,6 @@ export const bookmarkSlice = createSlice({
 		},
 		[removeBookmark.fulfilled]: (state:any,action)=>{
 			state = state.filter((bookmark:any)=>{
-				console.log(bookmark._id !== action.payload._id);
 				return bookmark._id !== action.payload._id;
 			});
 			return state;
@@ -76,7 +74,6 @@ export const bookmarkSlice = createSlice({
 			state.push(...action.payload);
 		},
 		[likeTweet.fulfilled]: (state:any,action)=>{
-			console.log(action.payload);			
 			state = state.map((tweet:any) => {
 				if(tweet.post._id === action.payload._id){
 					tweet.post = action.payload;
