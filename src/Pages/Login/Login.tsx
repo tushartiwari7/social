@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
-import { getAllUsers, login } from "app/features";
+import { getAllUsers, getBookmarks, login } from "app/features";
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ export const Login: FC = () => {
       message.error(resp.payload);
     } else {
       await dispatch(getAllUsers());
+      await dispatch(getBookmarks());
       navigate("/");
       message.success("Logged in successfully");
     }

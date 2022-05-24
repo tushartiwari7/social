@@ -13,7 +13,7 @@ export const Suggestions = () => {
     .slice(0, 7);
   return (
     <>
-      <Divider orientation="left">Who To Follow? </Divider>
+      <Divider orientation="left">Discover People 🚀 </Divider>
       <List
         itemLayout="horizontal"
         dataSource={users}
