@@ -66,7 +66,6 @@ export const bookmarkSlice = createSlice({
 		},
 		[removeBookmark.fulfilled]: (state:any,action)=>{
 			state = state.filter((bookmark:any)=>{
-				console.log(bookmark._id !== action.payload._id);
 				return bookmark._id !== action.payload._id;
 			});
 			return state;
@@ -75,7 +74,6 @@ export const bookmarkSlice = createSlice({
 			state.push(...action.payload);
 		},
 		[likeTweet.fulfilled]: (state:any,action)=>{
-			console.log(action.payload);			
 			state = state.map((tweet:any) => {
 				if(tweet.post._id === action.payload._id){
 					tweet.post = action.payload;

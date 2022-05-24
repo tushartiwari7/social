@@ -131,8 +131,6 @@ export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId
 				"Content-Type": "application/json",
 			}
 		});
-		console.log(data);
-		
 		if(data.success)
 			return data.like;
 	} catch (error:any) {
