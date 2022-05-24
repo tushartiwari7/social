@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const addComment: any = createAsyncThunk("post/comment", async (comment, { rejectWithValue }) => {
 	try {
-		const {data} = await axios.post("http://social-app-twitter.herokuapp.com/api/v1/post/comment", comment,{
+		const {data} = await axios.post("https://social-app-twitter.herokuapp.com/api/v1/post/comment", comment,{
 			headers: {
 				"Content-Type": "application/json",	
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`
@@ -17,7 +17,7 @@ export const addComment: any = createAsyncThunk("post/comment", async (comment, 
 
 export const getComments: any = createAsyncThunk("post/getComments", async (tweetId, { rejectWithValue }) => {
 	try {
-		const {data} = await axios.get("http://social-app-twitter.herokuapp.com/api/v1/post/comment/" + tweetId,{
+		const {data} = await axios.get("https://social-app-twitter.herokuapp.com/api/v1/post/comment/" + tweetId,{
 			headers: {
 				"Content-Type": "application/json",	
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`
@@ -33,7 +33,7 @@ export const postTweet:any = createAsyncThunk("tweet/post", async (tweet:any, { 
 	try {
 		const {data} = await axios({
 			method: "post",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweets",
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweets",
 			data: tweet,
 			headers: {
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -91,7 +91,7 @@ export const getSingleTweet:any = createAsyncThunk("tweet/single", async (tweetI
 	try {
 		const {data} = await axios({
 			method: "get",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweets/" + tweetId,
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/" + tweetId,
 			headers: {
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
 				"Content-Type": "application/json",
@@ -108,7 +108,7 @@ export const likeTweet:any = createAsyncThunk("tweet/like", async (tweetId: stri
 	try {
 		const {data} = await axios({
 			method: "post",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
 			headers: {
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
 				"Content-Type": "application/json",
@@ -125,7 +125,7 @@ export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId
 	try {
 		const {data} = await axios({
 			method: "delete",
-			url: "http://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweet/like/" + tweetId,
 			headers: {
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
 				"Content-Type": "application/json",
