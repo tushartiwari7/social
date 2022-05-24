@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const addComment: any = createAsyncThunk("post/comment", async (comment, { rejectWithValue }) => {
 	try {
-		const {data} = await axios.post("http://localhost:4000/api/v1/post/comment", comment,{
+		const {data} = await axios.post("http://social-app-twitter.herokuapp.com/api/v1/post/comment", comment,{
 			headers: {
 				"Content-Type": "application/json",	
 				Authorization: `Bearer ${sessionStorage.getItem("token")}`
