@@ -137,3 +137,49 @@ export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId
 		return rejectWithValue(error.response.data.message);
 	}
 });
+
+export const deleteTweet:any = createAsyncThunk("tweet/delete", async (tweetId: string, {rejectWithValue}) => {
+	try {
+		const {data} = await axios({
+			method: "delete",
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/"+tweetId,
+			headers: {
+				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+				"Content-Type": "application/json",
+			}
+		});	
+		if(data.success)
+			return data.tweet;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
+});
+
+type editTweetType = {
+	tweetId: string,
+	formData?: any
+}
+
+/**
+ * create slice methods for edit tweet and update state in redux
+ * how to send request request from frontend
+ * create formdata and call thunk
+ */
+
+export const editTweet:any = createAsyncThunk("tweet/edit", async ({tweetId,formData}: editTweetType, {rejectWithValue}) => {
+	try {
+		const {data} = await axios({
+			method: "put",
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/"+tweetId,
+			data: formData,
+			headers: {
+				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+				"Content-Type": "application/json",
+			}
+		});
+		if(data.success)
+			return data.tweet;
+	} catch (error:any) {
+		return rejectWithValue(error.data.response.message);
+	}
+});
