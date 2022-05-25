@@ -137,3 +137,21 @@ export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId
 		return rejectWithValue(error.response.data.message);
 	}
 });
+
+
+export const deleteTweet:any = createAsyncThunk("tweet/delete", async (tweetId: string, {rejectWithValue}) => {
+	try {
+		const {data} = await axios({
+			method: "delete",
+			url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/"+tweetId,
+			headers: {
+				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+				"Content-Type": "application/json",
+			}
+		});
+		if(data.success)
+			return data.tweet;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
+});
