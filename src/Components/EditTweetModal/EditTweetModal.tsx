@@ -40,11 +40,9 @@ export const EditTweetModal = ({
     <Modal
       title="Edit Tweet"
       visible={visible}
-      onOk={() => {
+      onOk={async () => {
         formData.append("description", tweet);
-        (async () => {
-          await dispatch(editTweet({ tweetId: tweetId, formData: formData }));
-        })();
+        await dispatch(editTweet({ tweetId, formData }));
         closeModal();
       }}
       onCancel={closeModal}

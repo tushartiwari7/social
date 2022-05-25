@@ -138,7 +138,6 @@ export const dislikeTweet:any = createAsyncThunk("tweet/dislike", async (tweetId
 	}
 });
 
-
 export const deleteTweet:any = createAsyncThunk("tweet/delete", async (tweetId: string, {rejectWithValue}) => {
 	try {
 		const {data} = await axios({
