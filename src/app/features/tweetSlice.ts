@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, deleteTweet, dislikeTweet, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
+import { addComment, deleteTweet, dislikeTweet, editTweet, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
 	feedTweets: [],
@@ -8,6 +8,7 @@ const initialState = {
 	singleTweet: {},
 	singleTweetComments: [],
 	loading: false,
+	editing: false,
 	commentsLoading: false,
 	error: ""
 };
@@ -190,6 +191,24 @@ export const tweetSlice = createSlice({
 		},
 		[deleteTweet.pending]: (state:any) => {
 			state.loading = true;
+		},
+		[editTweet.fulfilled]: (state:any, action) => {
+			console.log(action.payload);
+			state.feedTweets = state.feedTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
+			state.userTweets = state.userTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
+			state.allTweets = state.allTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
+
+			if(state.singleTweet._id === action.payload._id)
+				state.singleTweet = action.payload;
+			
+			state.editing = false;
+		},
+		[editTweet.pending]: (state:any) => {
+			state.editing = true;
+		},
+		[editTweet.rejected]: (state:any, action) => {
+			state.error = action.payload;
+			state.editing = false;
 		}
 	},
 })

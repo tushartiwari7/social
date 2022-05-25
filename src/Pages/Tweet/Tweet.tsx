@@ -21,16 +21,13 @@ const CommentList = ({ comments }: commentList) => {
     <List
       dataSource={comments}
       loading={commentsLoading}
-      renderItem={(props: any) => {
-        console.log(props);
-        return (
-          <Comment
-            author={props.userName}
-            content={props.body}
-            avatar={props.photoUrl}
-          />
-        );
-      }}
+      renderItem={(props: any) => (
+        <Comment
+          author={props.userName}
+          content={props.body}
+          avatar={props.photoUrl}
+        />
+      )}
     />
   );
 };

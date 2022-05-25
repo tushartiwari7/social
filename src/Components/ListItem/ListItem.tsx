@@ -120,7 +120,6 @@ export const ListItem = (tweet: any) => {
           )
         }
         onClick={() => {
-          console.log(tweet);
           navigate(`/u/${tweet.user._id}/tweet/${tweet._id}`, {
             state: { from: location },
           });
@@ -143,7 +142,8 @@ export const ListItem = (tweet: any) => {
         <EditTweetModal
           visible={editTweetModalVisible}
           closeModal={closeModal}
-          tweetContent={tweet.description}
+          description={tweet.description}
+          tweetId={tweet._id}
         />
       )}
     </>

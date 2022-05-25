@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteTweet, dislikeTweet, likeTweet } from "./thunkApiCalls/tweetThunk";
+import { deleteTweet, dislikeTweet, editTweet, likeTweet } from "./thunkApiCalls/tweetThunk";
 
 export const bookmarkTweet:any = createAsyncThunk("bookmark/add",async (tweetId:string,{rejectWithValue})=>{
 	try {
@@ -101,6 +101,9 @@ export const bookmarkSlice = createSlice({
 				}
 				return tweet;
 			})
+		},
+		[editTweet.fulfilled]: (state:any,action)=>{
+			state = state.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
 		}
 	}
 });
