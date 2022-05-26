@@ -28,7 +28,7 @@ export const deleteComment: any = createAsyncThunk("post/deleteComment", async (
 		if(data.success) 
 		 return data.comment;		
 	} catch (error:any) {
-		rejectWithValue(error?.data?.response?.message?? "Error deleting comment");
+		rejectWithValue(error.data.response.message);
 	}
 });
 
@@ -37,8 +37,8 @@ export const postTweet:any = createAsyncThunk("tweet/post", async (tweet:any, { 
 		const {data} = await axiosCall("/tweets", "post", tweet);
 		if(data.success)
 			return data.tweet;
-	} catch (error) {
-		return rejectWithValue(error);
+	} catch (error:any) {
+		return rejectWithValue(error.data.response.message);
 	}
 });
 
@@ -61,8 +61,8 @@ try {
 	if(data.success)
 		return data.tweets;
 	throw new Error(data.message);
-} catch (error) {
-	return rejectWithValue(error);
+} catch (error:any) {
+	return rejectWithValue(error.response.data.message);
 }
 });
 
@@ -111,8 +111,8 @@ export const deleteTweet:any = createAsyncThunk("tweet/delete", async (tweetId: 
 		const {data} = await axiosCall("/tweets/" + tweetId, "delete");
 		if(data.success)
 			return data.tweet;
-	} catch (error) {
-		return rejectWithValue(error);
+	} catch (error:any) {
+		return rejectWithValue(error.response.data.message);
 	}
 });
 

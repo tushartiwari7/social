@@ -12,9 +12,10 @@ export const authState = createSlice({
   name: "auth",
   initialState,
 	reducers: {
-		logout: ()=>{
+		logout: (state: any)=>{
 			sessionStorage.removeItem("token");
-			return initialState;
+			state =  initialState;
+			return state;
 		},
 	},
 	extraReducers: {

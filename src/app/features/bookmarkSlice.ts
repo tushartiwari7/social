@@ -30,8 +30,8 @@ export const getBookmarks:any = createAsyncThunk(
       if (data.success) {
         return data.bookmarks;
       }
-    } catch (error) {
-      return Promise.reject(error);
+    } catch (error: any) {
+      return Promise.reject(error.data.response.message);
     }
   }
 );
