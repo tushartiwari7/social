@@ -1,4 +1,4 @@
-import { Avatar, List, message, Space } from "antd";
+import { Image, Avatar, List, message, Space } from "antd";
 import {
   StarOutlined,
   LikeOutlined,
@@ -111,7 +111,8 @@ export const ListItem = (tweet: any) => {
         }
         extra={
           tweet.image?.url && (
-            <img
+            <Image
+              onClick={(e) => e.stopPropagation()}
               className="tweet-attached-img"
               width={272}
               alt="logo"
