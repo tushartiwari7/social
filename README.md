@@ -1,3 +1,13 @@
+Worrk to do - [26may]
+
+- Explore Page - [2hrs] - createThunk- [30mins] done
+  - testThunk - [20mins] done
+  - createPage - [30mins]
+  - testPage - [20mins]
+- search Users - [3hrs]
+- Replies on Comment
+- Enlarge Image on img click
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

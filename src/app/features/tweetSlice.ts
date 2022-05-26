@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, deleteTweet, dislikeTweet, editTweet, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
+import { addComment, deleteTweet, dislikeTweet, editTweet, getAllTweets, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
 	feedTweets: [],
@@ -32,6 +32,17 @@ export const tweetSlice = createSlice({
 		},
 		[getUserTweets.fulfilled]: (state:any, action) => {
 			state.userTweets = action.payload;
+			state.loading = false;
+		},
+		[getAllTweets.fulfilled]: (state:any, action) => {
+			state.allTweets =action.payload;
+			state.loading = false;
+		},
+		[getAllTweets.pending]: (state:any) => {
+			state.loading = true;
+		},
+		[getAllTweets.rejected]: (state:any,action) => {
+			state.error = action.payload;
 			state.loading = false;
 		},
 		[getUserTweets.rejected]: (state:any, action) => {

@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { axiosCall } from "app/utils";
 import axios from "axios";
 
 export const addComment: any = createAsyncThunk("post/comment", async (comment, { rejectWithValue }) => {
@@ -71,14 +72,7 @@ export const getUserTweets:any = createAsyncThunk(
 
 export const getFeed:any = createAsyncThunk("tweet/feed", async (state,{rejectWithValue}) => {
 try {
-	const {data} = await axios({
-		method: "get",
-		url: "https://social-app-twitter.herokuapp.com/api/v1/tweets/feed",
-		headers: {
-			Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-			"Content-Type": "application/json",
-		}
-	});
+	const {data} = await axiosCall("/tweets/feed", "get");
 	if(data.success)
 		return data.tweets;
 	throw new Error(data.message);
@@ -86,6 +80,16 @@ try {
 	return rejectWithValue(error);
 }
 });
+
+export const getAllTweets:any = createAsyncThunk("tweet/getAllTweets", async (state,{rejectWithValue}) => {
+	try {
+		const {data} = await axiosCall("/tweets", "get");
+		if(data.success)
+			return data.tweets;
+	} catch (error:any) {
+		return rejectWithValue(error.data.response.message);
+	}
+	});
 
 export const getSingleTweet:any = createAsyncThunk("tweet/single", async (tweetId:string,{rejectWithValue}) => {
 	try {
