@@ -5,7 +5,7 @@ export const login:any = createAsyncThunk("auth/login", async (userData:any,thun
 	try {
 		const {data}:any = await axiosCall("/login", "post", userData);
 		if(data.success) {
-			sessionStorage.setItem("token", data.token);
+			localStorage.setItem("token", data.token);
 			return data.user;
 		}
 	} catch (error: any) {
@@ -18,11 +18,21 @@ export const signup:any = createAsyncThunk("auth/signup", async (userData:any,th
 	try {
 		const {data}:any = await axiosCall("/signup", "post", userData);
 		if(data.success){
-			sessionStorage.setItem("token", data.token);
+			localStorage.setItem("token", data.token);
 			return data.user;
 		}
 	} catch (error: any) {
 		console.error({error});
+		return thunkAPI.rejectWithValue(error.response.data.message);
+	}
+});
+
+export const getAuthUser:any = createAsyncThunk("auth/user", async (_,thunkAPI:any) => {
+	try {
+		const {data}:any = await axiosCall("/user/profile", "get");
+		if(data.success)
+			return data.user;
+	} catch (error: any) {
 		return thunkAPI.rejectWithValue(error.response.data.message);
 	}
 });

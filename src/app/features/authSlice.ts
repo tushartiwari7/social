@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { followUser, getUser, login, signup, unfollowUser, updateUser } from "./thunkApiCalls/authThunk";
+import { followUser, getAuthUser, getUser, login, signup, unfollowUser, updateUser } from "./thunkApiCalls/authThunk";
 
 const initialState = {
   user: {},
@@ -13,7 +13,7 @@ export const authState = createSlice({
   initialState,
 	reducers: {
 		logout: (state: any)=>{
-			sessionStorage.removeItem("token");
+			localStorage.removeItem("token");
 			state =  initialState;
 			return state;
 		},
@@ -28,6 +28,17 @@ export const authState = createSlice({
 			state.user = {};
 			state.isLoggedIn = false;
 			state.loginError = action.payload;
+		},
+		[getAuthUser.fulfilled]: (state: any, action: any) => {
+			state.user = action.payload;
+			state.isLoggedIn = true;
+			state.loginStatus = "succeeded";
+		},
+		[getAuthUser.rejected]: (state: any, action: any) => {
+			state.user = {};
+			state.isLoggedIn = false;
+			state.loginStatus = "failed";
+			
 		},
 		[signup.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload;

@@ -14,7 +14,7 @@ export const axiosCall: any = async (url: string, method: string, data?: any) =>
       url: "https://social-app-twitter.herokuapp.com/api/v1" + url,
       data,
       headers: {
-        'Authorization': 'Bearer ' + sessionStorage.getItem("token"),
+        'Authorization': 'Bearer ' + localStorage.getItem("token"),
         'Content-Type': 'application/json'
       }
     });
