@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { commentUpdate, dislikeUpdate, stateUpdate } from "app/utils";
 import { addComment, deleteComment, deleteTweet, dislikeTweet, editTweet, getAllTweets, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
 	commentsLoading: false,
 	error: ""
 };
+const states = ['feedTweets', 'allTweets', 'userTweets'];
 
 
 export const tweetSlice = createSlice({
@@ -65,32 +67,12 @@ export const tweetSlice = createSlice({
 			state.loading = true;
 		},
 		[likeTweet.fulfilled]: (state:any, action) => {
-			console.log(action.payload);
-			
-			state.feedTweets = state.feedTweets.map((tweet:any) => {
-				if(tweet._id === action.payload._id){
-					return action.payload;
-				}
-				return tweet;
+			states.forEach((key:string) => {
+				state[key] = state[key].map((tweet:any) => stateUpdate(tweet, action.payload));
 			});
-			
-			state.allTweets = state.allTweets.map((tweet:any) => {
-				if(tweet._id === action.payload._id){
-					return action.payload;
-				}
-				return tweet;
-			});
-			
-			state.userTweets = state.userTweets.map((tweet:any) => {
-				if(tweet._id === action.payload._id){
-					return action.payload;
-				}
-				return tweet;
-			});
-			 
-			if(state.singleTweet._id === action.payload._id){
+
+			if(state.singleTweet._id === action.payload._id)
 				state.singleTweet = action.payload;
-			}
 			state.loading = false;
 		},
 		[likeTweet.pending]: (state:any) => {
@@ -101,36 +83,8 @@ export const tweetSlice = createSlice({
 			state.loading = false;
 		},
 		[dislikeTweet.fulfilled]: (state:any, action) => {
-			state.feedTweets = state.feedTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						likes: tweet.likes.filter((like:string) => like !== action.payload.user),
-						statistics: {...tweet.statistics, likeCount: tweet.statistics.likeCount - 1}
-					};
-				}
-				return tweet;
-			})
-			state.allTweets = state.allTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						likes: tweet.likes.filter((like:string) => like !== action.payload.user),
-						statistics: {...tweet.statistics, likeCount: tweet.statistics.likeCount - 1}
-					};
-				}
-				return tweet;
-			})
-
-			state.userTweets = state.userTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						likes: tweet.likes.filter((like:string) => like !== action.payload.user),
-						statistics: {...tweet.statistics, likeCount: tweet.statistics.likeCount - 1}
-					};
-				}
-				return tweet;
+			states.forEach((key:string) => {
+				state[key] = state[key].map((tweet:any) => dislikeUpdate(tweet, action.payload));
 			});
 
 			if(state.singleTweet._id === action.payload.post){
@@ -148,37 +102,11 @@ export const tweetSlice = createSlice({
 		},
 		[addComment.fulfilled]: (state:any, action) => {
 			state.singleTweetComments.unshift(action.payload);
-			state.singleTweet.statistics.commentCount = state.singleTweet.statistics.commentCount + 1;
+			state.singleTweet.statistics.commentCount++;
 			
-			state.feedTweets = state.feedTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
-					};
-				}
-				return tweet;
-			})
-
-			state.userTweets = state.userTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
-					};
-				}
-				return tweet;
+			states.forEach((key:string) => {
+				state[key] = state[key].map((tweet:any) => commentUpdate(tweet, action.payload));
 			});
-
-			state.allTweets = state.allTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount + 1}
-					};
-				}
-				return tweet;
-			})
 
 			state.commentsLoading = false;
 		},
@@ -193,10 +121,9 @@ export const tweetSlice = createSlice({
 			state.commentsLoading = true;
 		},
 		[deleteTweet.fulfilled]: (state:any, action) => {
-			console.log(action.payload);			
-			state.feedTweets = state.feedTweets.filter((tweet:any) => tweet._id !== action.payload._id);
-			state.userTweets = state.userTweets.filter((tweet:any) => tweet._id !== action.payload._id);
-			state.allTweets = state.allTweets.filter((tweet:any) => tweet._id !== action.payload._id);
+			states.forEach((key:string) => {
+				state[key] = state[key].filter((tweet:any) => tweet._id !== action.payload._id);
+			});
 			state.singleTweet = {};
 			state.loading = false;
 		},
@@ -204,14 +131,12 @@ export const tweetSlice = createSlice({
 			state.loading = true;
 		},
 		[editTweet.fulfilled]: (state:any, action) => {
-			console.log(action.payload);
-			state.feedTweets = state.feedTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
-			state.userTweets = state.userTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
-			state.allTweets = state.allTweets.map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
+			states.forEach((key:string) => {
+				state[key] = state[key].map((tweet:any) => tweet._id === action.payload._id? action.payload : tweet);
+			});
 
 			if(state.singleTweet._id === action.payload._id)
 				state.singleTweet = action.payload;
-			
 			state.editing = false;
 		},
 		[editTweet.pending]: (state:any) => {
@@ -222,41 +147,13 @@ export const tweetSlice = createSlice({
 			state.editing = false;
 		},
 		[deleteComment.fulfilled]: (state:any, action) => {
-			state.singleTweetComments = state.singleTweetComments.filter((comment:any) => {
-				return comment._id !== action.payload._id;
+
+			states.forEach((key:string) => {
+				state[key] = state[key].map((tweet:any) => commentUpdate(tweet, action.payload,true));
 			});
 
+			state.singleTweetComments = state.singleTweetComments.filter((comment:any) => comment._id !== action.payload._id);
 			state.singleTweet.statistics.commentCount = state.singleTweet.statistics.commentCount - 1;
-			state.feedTweets = state.feedTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
-					};
-				}
-				return tweet;
-			})
-
-			state.userTweets = state.userTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
-					};
-				}
-				return tweet;
-			})
-
-			state.allTweets = state.allTweets.map((tweet:any) => {
-				if(tweet._id === action.payload.post){
-					return {
-						...tweet,
-						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
-					};
-				}
-				return tweet;
-			})
-
 			state.commentsLoading = false;
 		},
 		[deleteComment.pending]: (state:any) => {
@@ -266,7 +163,6 @@ export const tweetSlice = createSlice({
 			state.error = action.payload;
 			state.commentsLoading = false;
 		}
-
 	},
 })
 

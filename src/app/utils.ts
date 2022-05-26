@@ -23,3 +23,36 @@ export const axiosCall: any = async (url: string, method: string, data?: any) =>
     return error;
   }
 }
+
+export const stateUpdate = (tweet:any,response: any) => {
+  if(tweet._id === response._id){
+    return response;
+  }
+  return tweet;
+}
+
+export const dislikeUpdate = (tweet:any,response: any) =>{
+    if(tweet._id === response.post){
+      return {
+        ...tweet,
+        likes: tweet.likes.filter((like:string) => like !== response.user),
+        statistics: {...tweet.statistics, likeCount: tweet.statistics.likeCount - 1}
+      };
+    }
+    return tweet;
+}
+
+export const commentUpdate = (tweet:any,response: any,decrement: boolean = false) =>{
+  if(tweet._id === response.post){
+    return {
+      ...tweet,
+      statistics: {
+        ...tweet.statistics, 
+        commentCount: decrement 
+          ? tweet.statistics.commentCount - 1 
+          : tweet.statistics.commentCount + 1
+      }
+    };
+  }
+  return tweet;
+};
