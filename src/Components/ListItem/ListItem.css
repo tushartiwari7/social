@@ -3,3 +3,6 @@
   object-fit: contain;
   max-height: 112px;
 }
+.ant-list-vertical .ant-list-item-meta-content .ant-list-item-meta-title {
+  margin: 0;
+}

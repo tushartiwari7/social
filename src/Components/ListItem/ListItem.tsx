@@ -47,6 +47,11 @@ export const ListItem = (tweet: any) => {
   const isBookmarked = bookmarks.some(
     (item: any) => item.post._id === tweet._id
   );
+  const createdAt = new Intl.DateTimeFormat("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(tweet.createdAt));
+
   const tweetActions = [
     <IconText
       Icon={isLiked ? LikeFilled : LikeOutlined}
@@ -136,6 +141,7 @@ export const ListItem = (tweet: any) => {
               {tweet.user.name}
             </Link>
           }
+          description={createdAt}
         />
         {tweet.description}
       </List.Item>

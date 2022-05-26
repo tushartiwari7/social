@@ -1,12 +1,9 @@
 Worrk to do - [26may]
 
-- Explore Page - [2hrs] - createThunk- [30mins] done
-  - testThunk - [20mins] done
-  - createPage - [30mins]
-  - testPage - [20mins]
+- Explore Page - [2hrs] - done
 - search Users - [3hrs]
 - Replies on Comment
-- Enlarge Image on img click
+- Enlarge Image on img click - done
 
 # Getting Started with Create React App
 

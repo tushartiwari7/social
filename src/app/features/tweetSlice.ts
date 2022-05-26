@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, deleteTweet, dislikeTweet, editTweet, getAllTweets, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
+import { addComment, deleteComment, deleteTweet, dislikeTweet, editTweet, getAllTweets, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
 	feedTweets: [],
@@ -220,7 +220,53 @@ export const tweetSlice = createSlice({
 		[editTweet.rejected]: (state:any, action) => {
 			state.error = action.payload;
 			state.editing = false;
+		},
+		[deleteComment.fulfilled]: (state:any, action) => {
+			state.singleTweetComments = state.singleTweetComments.filter((comment:any) => {
+				return comment._id !== action.payload._id;
+			});
+
+			state.singleTweet.statistics.commentCount = state.singleTweet.statistics.commentCount - 1;
+			state.feedTweets = state.feedTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
+					};
+				}
+				return tweet;
+			})
+
+			state.userTweets = state.userTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
+					};
+				}
+				return tweet;
+			})
+
+			state.allTweets = state.allTweets.map((tweet:any) => {
+				if(tweet._id === action.payload.post){
+					return {
+						...tweet,
+						statistics: {...tweet.statistics, commentCount: tweet.statistics.commentCount - 1}
+					};
+				}
+				return tweet;
+			})
+
+			state.commentsLoading = false;
+		},
+		[deleteComment.pending]: (state:any) => {
+			state.commentsLoading = true;
+		},
+		[deleteComment.rejected]: (state:any, action) => {
+			state.error = action.payload;
+			state.commentsLoading = false;
 		}
+
 	},
 })
 
