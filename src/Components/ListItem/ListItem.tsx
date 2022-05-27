@@ -1,4 +1,4 @@
-import { Avatar, List, message, Space } from "antd";
+import { Image, Avatar, List, message, Space } from "antd";
 import {
   StarOutlined,
   LikeOutlined,
@@ -47,6 +47,11 @@ export const ListItem = (tweet: any) => {
   const isBookmarked = bookmarks.some(
     (item: any) => item.post._id === tweet._id
   );
+  const createdAt = new Intl.DateTimeFormat("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(tweet.createdAt));
+
   const tweetActions = [
     <IconText
       Icon={isLiked ? LikeFilled : LikeOutlined}
@@ -111,7 +116,8 @@ export const ListItem = (tweet: any) => {
         }
         extra={
           tweet.image?.url && (
-            <img
+            <Image
+              onClick={(e) => e.stopPropagation()}
               className="tweet-attached-img"
               width={272}
               alt="logo"
@@ -135,6 +141,7 @@ export const ListItem = (tweet: any) => {
               {tweet.user.name}
             </Link>
           }
+          description={createdAt}
         />
         {tweet.description}
       </List.Item>

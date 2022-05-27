@@ -3,13 +3,12 @@ import { addComment } from "app/features";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export type editorType = {
-  submitting: boolean;
-  value: string;
-  setComments: any;
+type commentBox = {
+  parentId?: string;
+  close?: () => void;
 };
 
-export const AddCommentBox = () => {
+export const AddCommentBox = ({ parentId = "", close }: commentBox) => {
   const [form] = Form.useForm();
   const [prefix, setPrefix] = useState("@");
   const onSearch = (_: string, value: string) => setPrefix(value);
@@ -33,8 +32,15 @@ export const AddCommentBox = () => {
     try {
       const values = await form.validateFields();
       console.log(values);
-      await dispatch(addComment({ body: values["comment-input"], postId }));
+      await dispatch(
+        addComment({
+          body: values["comment-input"],
+          postId,
+          parentId: parentId || null,
+        })
+      );
       form.resetFields();
+      close && close();
     } catch (errInfo) {
       console.log("Error:", errInfo);
     }

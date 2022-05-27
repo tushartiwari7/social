@@ -1,17 +1,10 @@
-import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deleteTweet, dislikeTweet, editTweet, likeTweet } from "./thunkApiCalls/tweetThunk";
+import { axiosCall } from "app/utils";
 
 export const bookmarkTweet:any = createAsyncThunk("bookmark/add",async (tweetId:string,{rejectWithValue})=>{
 	try {
-		const {data} = await axios({
-			method: "post",
-			url: "https://social-app-twitter.herokuapp.com/api/v1/user/bookmark/" + tweetId,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
+		const {data} = await axiosCall("/user/bookmark/" + tweetId, "post");
 		if(data.success)
 			return data.bookmark;
 	} catch (error: any) {
@@ -21,14 +14,7 @@ export const bookmarkTweet:any = createAsyncThunk("bookmark/add",async (tweetId:
 
 export const removeBookmark:any = createAsyncThunk("bookmark/remove",async (bookmarkId:string,{rejectWithValue})=>{
 	try {
-		const {data} = await axios({
-			method: "delete",
-			url: "https://social-app-twitter.herokuapp.com/api/v1/user/bookmark/" + bookmarkId,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
+		const {data} = await axiosCall("/user/bookmark/" + bookmarkId, "delete");
 		if(data.success)
 			return data.bookmark;
 	} catch (error: any) {
@@ -40,17 +26,12 @@ export const getBookmarks:any = createAsyncThunk(
   "user/getBookmark",
   async () => {
     try {
-      const { data } = await axios.get("https://social-app-twitter.herokuapp.com/api/v1/user/bookmarks",{
-				headers: {
-					Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-					"Content-Type": "application/json",
-				}
-			});
+      const { data } = await axiosCall("/user/bookmarks", "get");
       if (data.success) {
         return data.bookmarks;
       }
-    } catch (error) {
-      return Promise.reject(error);
+    } catch (error: any) {
+      return Promise.reject(error.data.response.message);
     }
   }
 );
@@ -65,16 +46,11 @@ export const bookmarkSlice = createSlice({
 			state.unshift(action.payload);
 		},
 		[removeBookmark.fulfilled]: (state:any,action)=>{
-			state = state.filter((bookmark:any)=>{
-				return bookmark._id !== action.payload._id;
-			});
+			state = state.filter((bookmark:any)=>bookmark._id !== action.payload._id);
 			return state;
 		},
 		[deleteTweet.fulfilled]: (state:any,action)=>{
-			console.log(action.payload);
-			state = state.filter((bookmark:any)=>{
-				return bookmark.post._id !== action.payload._id;
-			});
+			state = state.filter((bookmark:any)=>bookmark.post._id !== action.payload._id);
 			return state;
 		},
 		[getBookmarks.fulfilled]: (state:any,action)=>{

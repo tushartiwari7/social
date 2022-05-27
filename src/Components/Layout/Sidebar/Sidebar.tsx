@@ -4,7 +4,6 @@ import { Layout, Menu } from "antd";
 import {
   BorderlessTableOutlined,
   HomeOutlined,
-  BellOutlined,
   TeamOutlined,
   UserOutlined,
   MoreOutlined,
@@ -49,7 +48,6 @@ export const Sidebar: FC = () => {
   const items: MenuItem[] = [
     getItem("Home", "1", <HomeOutlined />),
     getItem("Explore", "2", <BorderlessTableOutlined />),
-    getItem("Notifications", "3", <BellOutlined />),
     getItem("Connections", "sub1", <TeamOutlined />, [
       getItem("Followers", "4", <UserSwitchOutlined />),
       getItem("Followings", "5", <UserSwitchOutlined />),

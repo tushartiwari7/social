@@ -7,6 +7,7 @@ import { Header } from "Components/Header/Header";
 import {
   Bookmarks,
   Connections,
+  Explore,
   Feed,
   Redirects,
   Tweet,
@@ -24,6 +25,7 @@ export const AppLayout: FC = () => {
           <Route path="" element={<Feed />} />
           <Route path="/home" element={<Feed />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/profile" element={<Redirects />} />
           <Route path="/followers" element={<Redirects />} />
           <Route path="/followings" element={<Redirects />} />

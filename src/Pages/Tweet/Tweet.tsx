@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 // Feature: Tweet
 import { getComments, getSingleTweet } from "app/features";
-import { AddCommentBox, ListItem } from "Components";
 // Design: Tweet
-import { Comment, Avatar, Divider, List } from "antd";
+import { AddCommentBox, Comment, ListItem } from "Components";
+import { Comment as AntdComment, Avatar, Divider, List } from "antd";
 import "./Tweet.css";
 
 type commentList = {
@@ -21,25 +21,20 @@ const CommentList = ({ comments }: commentList) => {
     <List
       dataSource={comments}
       loading={commentsLoading}
-      renderItem={(props: any) => (
-        <Comment
-          author={props.userName}
-          content={props.body}
-          avatar={props.photoUrl}
-        />
-      )}
+      renderItem={(props: any) => <Comment {...props} />}
     />
   );
 };
 
 export const Tweet: FC = () => {
+  console.log("Tweet");
+
   const location = useLocation();
+  const dispatch = useDispatch();
   const tweetId = location.pathname.split("/").pop();
   const authUser = useSelector((state: any) => state.auth.user);
-  const { singleTweet, loading, singleTweetComments } = useSelector(
-    (state: any) => state.tweets
-  );
-  const dispatch = useDispatch();
+  const { singleTweet, loading, singleTweetComments, commentReplies } =
+    useSelector((state: any) => state.tweets);
   useEffect(() => {
     (async () => {
       await Promise.all([
@@ -62,15 +57,15 @@ export const Tweet: FC = () => {
         renderItem={(item) => item._id && <ListItem {...item} />}
       ></List>
       <Divider orientation="left">
-        Recent Comments ({singleTweetComments.length})
+        Recent Comments ({singleTweetComments.length + commentReplies.length})
       </Divider>
       {singleTweetComments.length > 0 && (
         <CommentList comments={singleTweetComments} />
       )}
-      <Comment
+      <AntdComment
         avatar={
           <Avatar
-            src={authUser?.photo.secure_url}
+            src={authUser?.photo?.secure_url}
             alt={authUser?.name}
             size="large"
           />

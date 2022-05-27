@@ -1,12 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosConfig, axiosConfigWithoutHeader } from "app/utils";
-import axios from "axios";
+import { axiosCall} from "app/utils";
 
 export const login:any = createAsyncThunk("auth/login", async (userData:any,thunkAPI:any) => {
 	try {
-		const {data}:any = await axios.post("/login", userData, axiosConfigWithoutHeader);
+		const {data}:any = await axiosCall("/login", "post", userData);
 		if(data.success) {
-			sessionStorage.setItem("token", data.token);
+			localStorage.setItem("token", data.token);
 			return data.user;
 		}
 	} catch (error: any) {
@@ -17,9 +16,9 @@ export const login:any = createAsyncThunk("auth/login", async (userData:any,thun
 	
 export const signup:any = createAsyncThunk("auth/signup", async (userData:any,thunkAPI:any) => {
 	try {
-		const {data}:any = await axios.post("/signup", userData,axiosConfigWithoutHeader);
+		const {data}:any = await axiosCall("/signup", "post", userData);
 		if(data.success){
-			sessionStorage.setItem("token", data.token);
+			localStorage.setItem("token", data.token);
 			return data.user;
 		}
 	} catch (error: any) {
@@ -28,9 +27,19 @@ export const signup:any = createAsyncThunk("auth/signup", async (userData:any,th
 	}
 });
 
+export const getAuthUser:any = createAsyncThunk("auth/user", async (_,thunkAPI:any) => {
+	try {
+		const {data}:any = await axiosCall("/user/profile", "get");
+		if(data.success)
+			return data.user;
+	} catch (error: any) {
+		return thunkAPI.rejectWithValue(error.response.data.message);
+	}
+});
+
 export const getUser:any = createAsyncThunk("auth/getUser", async (userId: string) => {
 	try {
-		const {data}:any = await axios.get(`/user/${userId}`,axiosConfig);
+		const {data}:any = await axiosCall("/user/" + userId, "get");
 		if(data.success)
 			return data.user;
 	} catch (error: any) {
@@ -39,63 +48,35 @@ export const getUser:any = createAsyncThunk("auth/getUser", async (userId: strin
 	}
 });
 
-export const updateUser:any = createAsyncThunk("auth/updateUser", async (userData:any,thunkAPI:any) => {
+export const updateUser:any = createAsyncThunk("auth/updateUser", async (userData:any,{rejectWithValue}) => {
 	try {
-		const {data}:any = await axios({
-			method: "post",
-			url: "https://social-app-twitter.herokuapp.com/api/v1/user/update_user_details",
-			data: userData,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		if(data.success){
+		const {data}:any = await axiosCall("/user/update_user_details", "post", userData);
+		if(data.success)
 			return data.user;
-		}
 	} catch (error: any) {
-		console.error({error});
-		return thunkAPI.rejectWithValue(error.response.data.message);
+		return rejectWithValue(error.response.data.message);
 	}
 }
 );
 
-export const followUser:any = createAsyncThunk("auth/followUser", async (followeeId:string,thunkAPI:any) => {
+export const followUser:any = createAsyncThunk("auth/followUser", async (followeeId:string,{rejectWithValue}) => {
 	try {
-		const {data}:any = await axios({
-			method: "put",
-			url: `https://social-app-twitter.herokuapp.com/api/v1/user/follow/${followeeId}`,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		
+		const {data}:any = await axiosCall("/user/follow/" + followeeId, "put");		
 		if(data.success){
 			return {user: data.user,followee: data.followee};
 		}
 	} catch (error: any) {
-		console.error({error});
-		return thunkAPI.rejectWithValue(error.response.data.message);
+		return rejectWithValue(error.response.data.message);
 	}
 });
 
 export const unfollowUser:any = createAsyncThunk("auth/unfollowUser", async (followeeId:string,thunkAPI:any) => {
 	try {
-		const {data}:any = await axios({
-			method: "patch",
-			url: `https://social-app-twitter.herokuapp.com/api/v1/user/unfollow/${followeeId}`,
-			headers: {
-				Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			}
-		});
-		
+		const {data}:any = await axiosCall("/user/unfollow/" + followeeId, "patch");
 		if(data.success){
 			return {user: data.user,followee: data.followee};
 		}
 	} catch (error: any) {
-		console.error({error});
 		return thunkAPI.rejectWithValue(error.response.data.message);
 	}
 });
