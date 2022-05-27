@@ -11,7 +11,7 @@ export const axiosCall: any = async (url: string, method: string, data?: any) =>
   try {
     const response = await axios({
       method,
-      url: "https://social-app-twitter.herokuapp.com/api/v1" + url,
+      url: (window.location.hostname==="localhost" ? "http://localhost:4000/api/v1" :"https://social-app-twitter.herokuapp.com/api/v1") + url,
       data,
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem("token"),

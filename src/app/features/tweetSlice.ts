@@ -8,6 +8,7 @@ const initialState = {
 	userTweets: [],
 	singleTweet: {},
 	singleTweetComments: [],
+	commentReplies: [],
 	loading: false,
 	editing: false,
 	commentsLoading: false,
@@ -101,20 +102,23 @@ export const tweetSlice = createSlice({
 			state.loading = false;
 		},
 		[addComment.fulfilled]: (state:any, action) => {
-			state.singleTweetComments.unshift(action.payload);
-			state.singleTweet.statistics.commentCount++;
+			if(action.payload.parentId)
+				state.commentReplies.unshift(action.payload);
+			else
+				state.singleTweetComments.unshift(action.payload);
 			
+			state.singleTweet.statistics.commentCount++;
 			states.forEach((key:string) => {
 				state[key] = state[key].map((tweet:any) => commentUpdate(tweet, action.payload));
 			});
-
 			state.commentsLoading = false;
 		},
 		[addComment.pending]: (state:any) => {	
 			state.commentsLoading = true;
 		},
 		[getComments.fulfilled]: (state:any, action) => {
-			state.singleTweetComments = action.payload;
+			state.singleTweetComments = action.payload.filter((comment:any) => !comment.parentId);
+			state.commentReplies = action.payload.filter((comment:any) => comment.parentId);
 			state.commentsLoading = false;
 		},
 		[getComments.pending]: (state:any) => {
@@ -153,6 +157,7 @@ export const tweetSlice = createSlice({
 			});
 
 			state.singleTweetComments = state.singleTweetComments.filter((comment:any) => comment._id !== action.payload._id);
+			state.commentReplies = state.commentReplies.filter((comment:any) => comment._id !== action.payload._id);
 			state.singleTweet.statistics.commentCount = state.singleTweet.statistics.commentCount - 1;
 			state.commentsLoading = false;
 		},
