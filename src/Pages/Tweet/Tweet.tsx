@@ -27,13 +27,14 @@ const CommentList = ({ comments }: commentList) => {
 };
 
 export const Tweet: FC = () => {
+  console.log("Tweet");
+
   const location = useLocation();
   const dispatch = useDispatch();
   const tweetId = location.pathname.split("/").pop();
   const authUser = useSelector((state: any) => state.auth.user);
-  const { singleTweet, loading, singleTweetComments } = useSelector(
-    (state: any) => state.tweets
-  );
+  const { singleTweet, loading, singleTweetComments, commentReplies } =
+    useSelector((state: any) => state.tweets);
   useEffect(() => {
     (async () => {
       await Promise.all([
@@ -56,7 +57,7 @@ export const Tweet: FC = () => {
         renderItem={(item) => item._id && <ListItem {...item} />}
       ></List>
       <Divider orientation="left">
-        Recent Comments ({singleTweetComments.length})
+        Recent Comments ({singleTweetComments.length + commentReplies.length})
       </Divider>
       {singleTweetComments.length > 0 && (
         <CommentList comments={singleTweetComments} />
@@ -64,7 +65,7 @@ export const Tweet: FC = () => {
       <AntdComment
         avatar={
           <Avatar
-            src={authUser?.photo.secure_url}
+            src={authUser?.photo?.secure_url}
             alt={authUser?.name}
             size="large"
           />
