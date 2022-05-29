@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { commentUpdate, dislikeUpdate, stateUpdate } from "app/utils";
+import dayjs from "dayjs";
 import { addComment, deleteComment, deleteTweet, dislikeTweet, editTweet, getAllTweets, getComments, getFeed, getSingleTweet, getUserTweets, likeTweet, postTweet } from "./thunkApiCalls/tweetThunk";
 
 const initialState = {
@@ -20,7 +21,32 @@ const states = ['feedTweets', 'allTweets', 'userTweets'];
 export const tweetSlice = createSlice({
 	name: "tweet",
 	initialState,
-	reducers: {},
+	reducers: {
+		sort: (state: any, action: any) => {
+			switch (action.payload) {
+				case "Latest":
+					states.forEach((key:string) => {
+						state[key] = state[key].sort((a: any, b: any) => dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? -1 : 1);
+					});
+					break;
+
+				case "Oldest":
+					states.forEach((key:string) => {
+						state[key] = state[key].sort((a: any, b: any) => dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1);
+					});
+					break;
+
+				case "Trending":
+					states.forEach((key:string) => {
+						state[key] = state[key].sort((a: any, b: any) => (b.statistics.likeCount + b.statistics.commentCount) - (a.statistics.likeCount + a.statistics.commentCount) );
+					});
+					break;
+
+				default:
+					break;
+			}
+		}
+	},
 	extraReducers: {
 		[postTweet.fulfilled]: (state:any, action) => {
 			state.feedTweets = [action.payload, ...state.feedTweets];
@@ -170,5 +196,5 @@ export const tweetSlice = createSlice({
 		}
 	},
 })
-
+export const {sort} = tweetSlice.actions;
 export default tweetSlice.reducer;

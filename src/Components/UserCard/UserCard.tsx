@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-export const UserCard = ({ person }: any) => {
+export const UserCard = ({ person, searchResult = false }: any) => {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -36,13 +36,15 @@ export const UserCard = ({ person }: any) => {
         }
         description={`@${person.username}`}
       />
-      <Switch
-        checkedChildren="Following"
-        unCheckedChildren="Follow"
-        checked={isFollowing}
-        loading={loading}
-        onChange={followHandler}
-      ></Switch>
+      {!searchResult && (
+        <Switch
+          checkedChildren="Following"
+          unCheckedChildren="Follow"
+          checked={isFollowing}
+          loading={loading}
+          onChange={followHandler}
+        ></Switch>
+      )}
     </List.Item>
   );
 };

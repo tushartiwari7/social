@@ -65,7 +65,7 @@ export const Sidebar: FC = () => {
       collapsible={true}
       collapsed={collapsed}
       onCollapse={handleCollapse}
-      breakpoint="md"
+      breakpoint="lg"
     >
       <Menu
         theme="dark"

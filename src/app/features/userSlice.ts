@@ -13,7 +13,7 @@ export const getAllUsers:any = createAsyncThunk("users/all",async ()=>{
 
 export const getFollowers:any = createAsyncThunk("users/followers",async (userId:string)=>{
 	try {
-		const {data}:any = await axiosCall("/users/followers/" + userId, "get");
+		const {data}:any = await axiosCall("/user/followers/" + userId, "get");
 		if(data.success)
 			return data.followers;
 	} catch(err:any) {
@@ -23,9 +23,19 @@ export const getFollowers:any = createAsyncThunk("users/followers",async (userId
 
 export const getFollowings:any = createAsyncThunk("users/followings",async (userId: string)=>{
 	try {
-		const {data}:any = await axiosCall("/users/followings/" + userId, "get");
+		const {data}:any = await axiosCall("/user/followings/" + userId, "get");
 		if(data.success)
 			return data.followings;
+	}catch(err:any) {
+		return Promise.reject(err.response.data.message);
+	}
+});
+
+export const searchUsers:any = createAsyncThunk("users/search",async (search:string)=>{
+	try {
+		const {data}:any = await axiosCall("/search_users?name=" + search, "get");
+		if(data.success)
+			return data.users;
 	}catch(err:any) {
 		return Promise.reject(err.response.data.message);
 	}

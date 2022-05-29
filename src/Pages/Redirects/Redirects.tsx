@@ -22,7 +22,6 @@ export const Redirects: FC = () => {
 
       case "/Logout": {
         dispatch(logout());
-
         break;
       }
       default:
