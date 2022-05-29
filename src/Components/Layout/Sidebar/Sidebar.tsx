@@ -62,10 +62,10 @@ export const Sidebar: FC = () => {
 
   return (
     <Sider
-      collapsible={true}
       collapsed={collapsed}
       onCollapse={handleCollapse}
       breakpoint="lg"
+      className="navbar"
     >
       <Menu
         theme="dark"
