@@ -27,8 +27,6 @@ const CommentList = ({ comments }: commentList) => {
 };
 
 export const Tweet: FC = () => {
-  console.log("Tweet");
-
   const location = useLocation();
   const dispatch = useDispatch();
   const tweetId = location.pathname.split("/").pop();
