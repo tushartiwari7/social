@@ -1,4 +1,4 @@
-import { Button, Divider, Space, Typography } from "antd";
+import { Button, Divider, Empty, Space, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -46,65 +46,82 @@ export const UserProfile: FC = () => {
     current.scrollTo(0, 0);
 
     // getUserTweets
-    (async () => {
-      await dispatch(getUserTweets(user?._id));
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+    if (user) {
+      console.log(user);
+      (async () => {
+        await dispatch(getUserTweets(user._id));
+      })();
+    }
+  }, [pathname, dispatch, user]);
 
   return (
     <section ref={ref} className="user-profile">
-      <img
-        src={`${window.location.origin}/userBanner.svg`}
-        width="100%"
-        alt="user"
-      />
-      <div className="avatar-container">
-        <img
-          src={user?.photo?.secure_url ?? "https://picsum.photos/200"}
-          className="avatar"
-          alt="user"
-        />
-        <Button
-          className="btn-follow"
-          type="primary"
-          loading={loading}
-          onClick={isAdmin ? () => setVisible((v) => !v) : followHandler}
-        >
-          {isAdmin ? "Edit Profile" : isFollowing ? "Unfollow" : "Follow"}
-        </Button>
-        <EditUserModal visible={visible} setVisible={setVisible} user={user} />
-      </div>
-      <div className="user-info">
-        <Title level={4}>{user?.name}</Title>
-        <Title level={5}>{user?.bio ?? "No bio available"}</Title>
-        <div className="follow-info">
-          <Link to="connections?default=followers" state={{ from: location }}>
-            {user?.followersCount} followers
-          </Link>
-          <Link to="connections?default=followings" state={{ from: location }}>
-            {user?.followingCount} following
-          </Link>
-        </div>
-        <Space size="large" style={{ marginTop: "10px" }}>
-          {user?.location && (
-            <Typography.Text>
-              <EnvironmentOutlined style={{ marginRight: "2px" }} />
-              {user.location}
-            </Typography.Text>
-          )}
-          {user?.website && (
-            <Typography.Link href={user.website} target="_blank">
-              <PaperClipOutlined style={{ marginRight: "2px" }} />
-              {user.website}
-            </Typography.Link>
-          )}
-        </Space>
-      </div>
-      <Divider orientation="left">
-        <Typography.Title level={3}>Tweets</Typography.Title>
-      </Divider>
-      <UserTweets />
+      {user ? (
+        <>
+          <img
+            src={`${window.location.origin}/userBanner.svg`}
+            width="100%"
+            alt="user"
+          />
+          <div className="avatar-container">
+            <img src={user.photo?.secure_url} className="avatar" alt="user" />
+            <Button
+              className="btn-follow"
+              type="primary"
+              loading={loading}
+              onClick={isAdmin ? () => setVisible((v) => !v) : followHandler}
+            >
+              {isAdmin ? "Edit Profile" : isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+            <EditUserModal
+              visible={visible}
+              setVisible={setVisible}
+              user={user}
+            />
+          </div>
+          <div className="user-info">
+            <Title level={4}>{user.name}</Title>
+            <Title level={5}>{user.bio || "No bio available"}</Title>
+            <div className="follow-info">
+              <Link
+                to="connections?default=followers"
+                state={{ from: location }}
+              >
+                {user?.followersCount} followers
+              </Link>
+              <Link
+                to="connections?default=followings"
+                state={{ from: location }}
+              >
+                {user?.followingCount} following
+              </Link>
+            </div>
+            <Space size="large" style={{ marginTop: "10px" }}>
+              {user?.location && (
+                <Typography.Text>
+                  <EnvironmentOutlined style={{ marginRight: "2px" }} />
+                  {user.location}
+                </Typography.Text>
+              )}
+              {user?.website && (
+                <Typography.Link href={user.website} target="_blank">
+                  <PaperClipOutlined style={{ marginRight: "2px" }} />
+                  {user.website}
+                </Typography.Link>
+              )}
+            </Space>
+          </div>
+          <Divider orientation="left">
+            <Typography.Title level={3}>Tweets</Typography.Title>
+          </Divider>
+          <UserTweets />
+        </>
+      ) : (
+        <Empty
+          image="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          description={<span>User Not Availaible</span>}
+        ></Empty>
+      )}
     </section>
   );
 };

@@ -14,6 +14,7 @@
   border-radius: 50%;
   border: 5px solid var(--bg-color);
   position: absolute;
+  object-fit: cover;
 }
 .avatar-edit {
   width: 150px;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosCall } from "app/utils";
+import { signup } from "./thunkApiCalls/authThunk";
 
 export const getAllUsers:any = createAsyncThunk("users/all",async ()=>{
 	try {
@@ -46,8 +47,12 @@ export const userState = createSlice({
 	initialState: [],
 	reducers: {},
 	extraReducers: {
-		[getAllUsers.fulfilled]: (state: any, action: any) => {
+		[getAllUsers.fulfilled]: (state: any, action) => {
 			state = action.payload;
+			return state;
+		},
+		[signup.fulfilled]: (state: any, action) => {
+			state.push(action.payload);
 			return state;
 		}
 	},

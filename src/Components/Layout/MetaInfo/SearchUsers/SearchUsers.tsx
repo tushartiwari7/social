@@ -23,7 +23,7 @@ export const SearchUsers: React.FC = () => {
         const res = await dispatch(searchUsers(search));
         setOptions(!search ? [] : res.payload);
       })();
-    }, 500);
+    }, 300);
   };
 
   const onSelect = (username: string) => navigate(`/u/${username}`);
