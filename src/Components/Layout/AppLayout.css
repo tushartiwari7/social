@@ -5,11 +5,13 @@
   margin: 0 auto;
   height: 100vh;
 }
+
 main {
   display: grid;
   height: 100vh;
   grid-template-rows: auto 1fr;
 }
+
 .navbar {
   min-width: 0 !important;
   width: auto !important;
