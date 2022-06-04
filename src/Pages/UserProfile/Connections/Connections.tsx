@@ -14,7 +14,7 @@ export const Connections: FC = () => {
   const userDb = users.find((singleUser: any) => singleUser.username === user);
 
   return (
-    <div>
+    <div className="connections">
       <Tabs defaultActiveKey={defaultTab} centered>
         <Tabs.TabPane tab="Followers" key="followers">
           <Followers userId={user.length > 15 ? user : userDb?._id} />

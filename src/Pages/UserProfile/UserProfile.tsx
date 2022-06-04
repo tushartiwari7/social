@@ -47,7 +47,6 @@ export const UserProfile: FC = () => {
 
     // getUserTweets
     if (user) {
-      console.log(user);
       (async () => {
         await dispatch(getUserTweets(user._id));
       })();

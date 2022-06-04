@@ -56,11 +56,13 @@ button.btn-follow {
 .user-info {
   padding-left: 2rem;
 }
-.user-profile {
+.user-profile,
+.connections {
   overflow: auto;
   scrollbar-width: 0;
 }
-.user-profile::-webkit-scrollbar {
+.user-profile::-webkit-scrollbar,
+.connections::-webkit-scrollbar {
   width: 0;
 }
 .select-after {

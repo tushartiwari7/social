@@ -23,6 +23,7 @@ export const axiosCall: any = async (
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
         "Content-Type": "application/json",
+        "userId": "sidhumoosewala"
       },
     });
     return response;

@@ -6,13 +6,13 @@ import {
   HomeOutlined,
   TeamOutlined,
   UserOutlined,
-  MoreOutlined,
   UserSwitchOutlined,
-  SettingOutlined,
   BulbOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import { logout } from "app/features";
+import { useDispatch } from "react-redux";
 
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -21,7 +21,7 @@ export const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const dispatch = useDispatch();
   const handleCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
   };
@@ -36,7 +36,11 @@ export const Sidebar: FC = () => {
       key,
       icon,
       onClick: () => {
-        if (key !== "sub1" && key !== "sub2") {
+        if (label === "Logout") {
+          dispatch(logout());
+          return navigate("/login");
+        }
+        if (key !== "sub1") {
           navigate(label, { state: { from: location } });
         }
       },
@@ -54,10 +58,7 @@ export const Sidebar: FC = () => {
     ]),
     getItem("Bookmarks", "6", <BulbOutlined />),
     getItem("Profile", "7", <UserOutlined />),
-    getItem("More", "sub2", <MoreOutlined />, [
-      getItem("Settings", "8", <SettingOutlined />),
-      getItem("Logout", "9", <UserDeleteOutlined />),
-    ]),
+    getItem("Logout", "8", <UserDeleteOutlined />),
   ];
 
   return (
@@ -65,12 +66,12 @@ export const Sidebar: FC = () => {
       collapsed={collapsed}
       onCollapse={handleCollapse}
       breakpoint="lg"
-      className="navbar"
+      className={`navbar ${collapsed ? "mobile-view" : ""}`}
     >
       <Menu
         theme="dark"
         defaultSelectedKeys={["1"]}
-        mode="inline"
+        mode={collapsed ? "horizontal" : "inline"}
         items={items}
       />
     </Sider>

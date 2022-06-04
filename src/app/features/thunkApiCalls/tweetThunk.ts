@@ -24,7 +24,6 @@ export const getComments: any = createAsyncThunk("post/getComments", async (twee
 export const deleteComment: any = createAsyncThunk("post/deleteComment", async (commentId, { rejectWithValue }) => {
 	try {
 		const {data} = await axiosCall("/post/comment/" + commentId, "delete");
-		console.log(data);
 		if(data.success) 
 		 return data.comment;		
 	} catch (error:any) {

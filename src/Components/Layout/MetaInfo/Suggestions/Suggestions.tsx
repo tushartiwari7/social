@@ -3,17 +3,16 @@ import { useSelector } from "react-redux";
 import { UserCard } from "Components";
 
 export const Suggestions = () => {
-  const auth = useSelector((state: any) => state.auth);
+  const userId = useSelector((state: any) => state.auth.user._id);
   const allUsers = useSelector((state: any) => state.users);
   const users = allUsers
-    ?.filter(
-      //if user is not following
-      (user: any) => !(auth?.user?._id === user?._id)
-    )
-    .slice(0, 7);
+    .slice(allUsers.length - 7)
+    .filter((user: any) => user._id !== userId)
+    .reverse();
+
   return (
     <>
-      <Divider orientation="left">Discover People 🚀 </Divider>
+      <Divider orientation="left">Discover New People 🚀 </Divider>
       <List
         itemLayout="horizontal"
         dataSource={users}
