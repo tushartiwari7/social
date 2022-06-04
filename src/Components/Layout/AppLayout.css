@@ -33,6 +33,12 @@ main {
 .mobile-view .ant-layout-sider-children ul {
   justify-content: center;
 }
+
+.mobile-view .ant-layout-sider-children ul svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 .mobile-view .ant-layout-sider-children .ant-menu-title-content {
   display: none;
 }
