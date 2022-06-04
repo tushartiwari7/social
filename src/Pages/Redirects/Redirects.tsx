@@ -1,12 +1,10 @@
 import { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
-import { logout } from "app/features";
 
 export const Redirects: FC = () => {
   const location: any = useLocation();
   const { pathname } = location;
-  const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
 
   const getRedirectLink = (pathname: string) => {
@@ -20,18 +18,13 @@ export const Redirects: FC = () => {
       case "/Followings":
         return "/u/" + auth.user.username + "/connections?default=followings";
 
-      case "/Logout": {
-        dispatch(logout());
-        break;
-      }
       default:
         return "/";
     }
   };
-
   return (
     <Navigate
-      to={getRedirectLink(pathname) ?? "/"}
+      to={getRedirectLink(pathname)}
       replace
       state={location.state?.from}
     />

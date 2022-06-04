@@ -5,12 +5,34 @@
   margin: 0 auto;
   height: 100vh;
 }
+
 main {
   display: grid;
   height: 100vh;
   grid-template-rows: auto 1fr;
 }
+
 .navbar {
   min-width: 0 !important;
   width: auto !important;
+}
+
+.navbar,
+.navbar * {
+  background-color: var(--bg-black) !important;
+}
+
+.mobile-view .ant-layout-sider-children {
+  z-index: 1;
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  height: fit-content;
+}
+
+.mobile-view .ant-layout-sider-children ul {
+  justify-content: center;
+}
+.mobile-view .ant-layout-sider-children .ant-menu-title-content {
+  display: none;
 }

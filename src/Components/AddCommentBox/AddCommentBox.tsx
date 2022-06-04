@@ -31,7 +31,6 @@ export const AddCommentBox = ({ parentId = "", close }: commentBox) => {
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
       await dispatch(
         addComment({
           body: values["comment-input"],

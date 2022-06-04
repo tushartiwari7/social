@@ -9,6 +9,12 @@ div.search-users {
 .meta-info {
   display: none;
 }
+
+.meta-info,
+.meta-info > * {
+  background-color: var(--bg-black) !important;
+}
+
 @media screen and (min-width: 768px) {
   .meta-info {
     /* ant design is using inline css so added !important to alter that */

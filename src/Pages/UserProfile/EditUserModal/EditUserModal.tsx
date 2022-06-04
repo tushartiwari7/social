@@ -45,7 +45,7 @@ export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
     setLoading(true);
     const userInputArr = Object.entries(userInput);
     userInputArr.forEach(([key, value]) => {
-      formData.append(key, value);
+      if (value) formData.append(key, value);
     });
     await dispatch(updateUser(formData));
     setLoading(false);
