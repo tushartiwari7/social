@@ -1,4 +1,5 @@
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { getAllUsers, getBookmarks, login } from "app/features";
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -38,8 +39,6 @@ export const Login: FC = () => {
           name="login-form"
           initialValues={{
             remember: true,
-            email: process.env.REACT_APP_GUEST_MAIL,
-            password: process.env.REACT_APP_GUEST_PASSWORD,
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -50,13 +49,20 @@ export const Login: FC = () => {
             name="email"
             rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input type="email" placeholder="Email Address" />
+            <Input
+              type="email"
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email Address"
+            />
           </Form.Item>
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password placeholder="Password" />
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Password"
+            />
           </Form.Item>
           <Form.Item name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
@@ -71,6 +77,19 @@ export const Login: FC = () => {
               LOGIN
             </Button>
           </Form.Item>
+          <Typography.Paragraph className="login-test-credentials">
+            <Typography.Link
+              href="#"
+              onClick={() => {
+                onFinish({
+                  email: process.env.REACT_APP_GUEST_MAIL,
+                  password: process.env.REACT_APP_GUEST_PASSWORD,
+                });
+              }}
+            >
+              Login with Test Credentials.
+            </Typography.Link>
+          </Typography.Paragraph>
           <Typography.Text className="login-form-forgot">
             Not a User? <Link to="/signup">Create Account.</Link>
           </Typography.Text>
