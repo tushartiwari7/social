@@ -1,77 +1,62 @@
-Worrk to do - [26may]
 
-- Explore Page - [2hrs] - done
-- search Users - [3hrs]
-- Replies on Comment
-- Enlarge Image on img click - done
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/66322728/172832239-6a237243-be7b-45ea-9a4a-cbfb4261b9e8.png" height="100" width="100" alt="logo"/>
+  <h1><a href="https://www.tushar.social">Elevate Social</a></h1>
+    <p>A Social Media Application to share Tweets, meet new People and interact with creative minds.</p>
+ </div>
 
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How to run the app locally?
+```
+$ git clone https://github.com/tushartiwari7/social.git
+$ cd social
+$ npm install
+$ npm start
+```
 
-## Available Scripts
+## App Screens -
+- Authentication (Login, Signup) Pages
+- Home Page
+- Explore Page
+- Bookmarks Page
+- Profile Page
+- Single Tweet Page
+- Connections - Followers/Followings page
 
-In the project directory, you can run:
+## Features
+- **Authentication using JWT** along with form validation for Login and Signup Pages.
+- User can perform **CRUD operations** on his own Tweets and Comments.
+- JPG/PNG **Images** less than 2MB can be attached with Tweets.
+- User can **like or unlike** any Tweet.
+- User can add or remove post from **bookmarks**.
+- Home Page where user can see their tweets and the **tweets of friends followed by user**.
+- Explore Page where **all the posts** will be visible.
+- **Sort the Tweets** by either Trending, Latest or Oldest on Home, Explore and Profile Page.
+- Bookmarks Page where all the **posts bookmarked** by user will be visible.
+- Profile Page where user can **edit their profile**. It contains details like **Avatar, Bio, Location, Followers, Followings and Portfolio URL**.
+- **Persist User State** on reload - Login once and it's enough.
+- User can **follow or unfollow** other users from Profile Page, Suggestions, Followers & Followings Page.
+- User can view the Profile, Followers/Followings of any user.
+- Search Users by their First Name/ Last Name.
+- Suggestions with Follow Switch on all pages.
+- User can view all the comments of the post on the Individual Tweet Page.
+- User can comment on Tweet, some other comment's or comment on comment and so on.
+- Loader is shown while the Data is fetched, it can be Tweets, Comments etc.
+- Alerts in the app to notify the users about success/failure operations.
+- All the screens are Responsive.
 
-### `yarn start`
+## Tech Stack and Tools
+- Frontend: React + TypeScript
+- State Management: Redux Toolkit
+- Design Library: Ant Design 
+- Database Management: MongoDB
+- Backend: Node, ExpressJS
+- Image Storage: Cloudinary
+- Auto Formatter: Prettier
+- IDE: VS Code
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Demo Video
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+https://user-images.githubusercontent.com/66322728/172871843-1ad508dc-af7d-47af-85eb-80e42e2017fb.mp4
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+https://user-images.githubusercontent.com/66322728/172872049-b2e6595a-d40c-49a8-8c2d-82621c2bea30.mp4
