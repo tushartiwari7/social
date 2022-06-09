@@ -31,8 +31,10 @@ export const Tweet: FC = () => {
   const dispatch = useDispatch();
   const tweetId = location.pathname.split("/").pop();
   const authUser = useSelector((state: any) => state.auth.user);
-  const { singleTweet, loading, singleTweetComments, commentReplies } =
-    useSelector((state: any) => state.tweets);
+  const { singleTweet, loading, singleTweetComments } = useSelector(
+    (state: any) => state.tweets
+  );
+
   useEffect(() => {
     (async () => {
       await Promise.all([
@@ -55,7 +57,7 @@ export const Tweet: FC = () => {
         renderItem={(item) => item._id && <ListItem {...item} />}
       ></List>
       <Divider orientation="left">
-        Recent Comments ({singleTweetComments.length + commentReplies.length})
+        Recent Comments ({singleTweet?.statistics?.commentCount})
       </Divider>
       {singleTweetComments.length > 0 && (
         <CommentList comments={singleTweetComments} />

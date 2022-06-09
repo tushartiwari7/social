@@ -18,6 +18,7 @@ export const UserProfile: FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
   const dispatch = useDispatch();
+
   let user = users.find((user: any) =>
     pathname.split("/")[2].length < 15
       ? user.username === pathname.split("/")[2]

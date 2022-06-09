@@ -10,19 +10,20 @@ export const Login: FC = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const onFinish = async (values: any) => {
     setLoading(true);
-    const resp = await dispatch(login(values));
-    setLoading(false);
-    if (resp.error?.message === "Rejected") {
-      message.error(resp.payload);
-    } else {
-      await dispatch(getAllUsers());
-      await dispatch(getBookmarks());
+    try {
+      await Promise.all([
+        dispatch(login(values)),
+        dispatch(getAllUsers()),
+        dispatch(getBookmarks()),
+      ]);
       navigate("/");
       message.success("Logged in successfully");
+    } catch (error) {
+      message.error("Oops!, Login Failed.");
     }
+    setLoading(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {

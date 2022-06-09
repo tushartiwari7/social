@@ -10,7 +10,7 @@ export const login:any = createAsyncThunk("auth/login", async (userData:any,thun
 		}
 	} catch (error: any) {
 		console.error({error});
-		return thunkAPI.rejectWithValue(error.response.data.message);
+		return thunkAPI.rejectWithValue(error.message);
 	}
 });
 	

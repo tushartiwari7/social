@@ -24,10 +24,11 @@ export const authState = createSlice({
       state.isLoggedIn = true;
       state.loginStatus = "succeeded";
 		},
-		[login.rejected]: (state: any, action: any) => {
+		[login.rejected]: (state: any, action) => {
 			state.user = {};
 			state.isLoggedIn = false;
-			state.loginError = action.payload;
+			state.error = action.payload;
+			return action.payload;
 		},
 		[getAuthUser.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload;
@@ -48,26 +49,26 @@ export const authState = createSlice({
 		[signup.rejected]: (state: any, action: any) => {
 			state.user = {};
 			state.isLoggedIn = false;
-			state.loginError = action.payload;
+			state.error = action.payload;
 		},
 		[updateUser.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload;
 			state.loginStatus = "succeeded";
 		},
 		[updateUser.rejected]: (state: any, action: any) => {
-			state.loginError = action.payload;
+			state.error = action.payload;
 		},
 		[followUser.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload.user;
 		},
 		[followUser.rejected]: (state: any, action: any) => {
-			state.loginError = action.payload;
+			state.error = action.payload;
 		},
 		[unfollowUser.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload.user;
 		},
 		[unfollowUser.rejected]: (state: any, action: any) => {
-			state.loginError = action.payload;
+			state.error = action.payload;
 		},
 		[getUser.fulfilled]: (state: any, action: any) => {
 			state.user = action.payload;

@@ -37,16 +37,19 @@ const IconText = ({ Icon, text, onClick }: iconType) => (
 export const ListItem = (tweet: any) => {
   const [editTweetModalVisible, setEditTweetModalVisible] = useState(false);
   const closeModal = () => setEditTweetModalVisible(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const authUser = useSelector((state: any) => state.auth.user);
   const bookmarks = useSelector((state: any) => state.bookmarks);
+
   const isAuthUserPost = authUser._id === tweet.user._id;
   const isLiked = tweet.likes.includes(authUser._id);
   const isBookmarked = bookmarks.some(
     (item: any) => item.post._id === tweet._id
   );
+
   const createdAt = new Intl.DateTimeFormat("en-IN", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -59,8 +62,10 @@ export const ListItem = (tweet: any) => {
       key="list-vertical-like-o"
       onClick={async (e) => {
         e.stopPropagation();
+
         if (isLiked) await dispatch(dislikeTweet(tweet._id));
         else await dispatch(likeTweet(tweet._id));
+
         if (isLiked) message.success("Like Removed");
         else message.success("Liked Tweet");
       }}
