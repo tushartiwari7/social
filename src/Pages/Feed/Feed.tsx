@@ -38,6 +38,7 @@ export const Feed: FC = () => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) return;
     (async () => {
       await dispatch(getFeed());
     })();

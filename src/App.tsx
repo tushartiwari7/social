@@ -22,7 +22,7 @@ const App: React.FC = () => {
       } else navigate("/login");
     }
     // eslint-disable-next-line
-  }, [auth.isLoggedIn]);
+  }, []);
   return (
     <div className="App">
       <Routes>

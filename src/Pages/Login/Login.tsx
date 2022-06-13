@@ -13,11 +13,8 @@ export const Login: FC = () => {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      await Promise.all([
-        dispatch(login(values)),
-        dispatch(getAllUsers()),
-        dispatch(getBookmarks()),
-      ]);
+      await dispatch(login(values));
+      await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
       navigate("/");
       message.success("Logged in successfully");
     } catch (error) {
