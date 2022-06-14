@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState, FollowAction, User } from "./authSlice.types";
+import { User, AuthState, FollowAction } from "./authSlice.types";
 import {
   followUser,
   getAuthUser,
@@ -8,7 +8,7 @@ import {
   signup,
   unfollowUser,
   updateUser,
-} from "./thunkApiCalls/authThunk";
+} from "./authThunk";
 
 const initialState: AuthState = {
   user: {},
