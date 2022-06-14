@@ -43,28 +43,31 @@ export const tweetSlice = createSlice({
   name: "tweet",
   initialState,
   reducers: {
-    sort: (state: any, action: any) => {
+    sort: (
+      state: TweetSlice,
+      action: PayloadAction<"Trending" | "Latest" | "Oldest">
+    ) => {
       switch (action.payload) {
         case "Latest":
-          states.forEach((key: string) => {
-            state[key] = state[key].sort((a: any, b: any) =>
+          states.forEach((key) => {
+            state[key] = state[key].sort((a, b) =>
               dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? -1 : 1
             );
           });
           break;
 
         case "Oldest":
-          states.forEach((key: string) => {
-            state[key] = state[key].sort((a: any, b: any) =>
+          states.forEach((key) => {
+            state[key] = state[key].sort((a, b) =>
               dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1
             );
           });
           break;
 
         case "Trending":
-          states.forEach((key: string) => {
+          states.forEach((key) => {
             state[key] = state[key].sort(
-              (a: any, b: any) =>
+              (a, b) =>
                 b.statistics.likeCount +
                 b.statistics.commentCount -
                 (a.statistics.likeCount + a.statistics.commentCount)
