@@ -15,7 +15,14 @@ import {
   likeTweet,
   postTweet,
 } from "./tweetThunk";
-import { DislikeTweet, Tweet, TweetSlice, TweetTypes } from "./tweet.types";
+
+import {
+  Comment,
+  DislikeTweet,
+  Tweet,
+  TweetSlice,
+  TweetTypes,
+} from "./tweet.types";
 
 const initialState: TweetSlice = {
   feedTweets: [],
@@ -159,85 +166,87 @@ export const tweetSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-    [addComment.fulfilled]: (state: any, action) => {
-      console.log(action.payload);
+    [addComment.fulfilled]: (state, action: PayloadAction<Comment>) => {
       if (action.payload.parentId) state.commentReplies.unshift(action.payload);
       else state.singleTweetComments.unshift(action.payload);
-
-      state.singleTweet.statistics.commentCount++;
-      states.forEach((key: string) => {
-        state[key] = state[key].map((tweet: any) =>
+      if (state.singleTweet) state.singleTweet.statistics.commentCount++;
+      states.forEach((key) => {
+        state[key] = state[key].map((tweet) =>
           commentUpdate(tweet, action.payload)
         );
       });
       state.commentsLoading = false;
     },
-    [addComment.pending]: (state: any) => {
+    [addComment.pending]: (state) => {
       state.commentsLoading = true;
     },
-    [getComments.fulfilled]: (state: any, action) => {
+    [getComments.fulfilled]: (state, action: PayloadAction<Comment[]>) => {
+      // Comments which are directly linked to post are stored in the singleTweetComments state
       state.singleTweetComments = action.payload.filter(
-        (comment: any) => !comment.parentId
+        (comment) => !comment.parentId
       );
+      // Comments which are replies to other comments are stored in the commentReplies state
       state.commentReplies = action.payload.filter(
-        (comment: any) => comment.parentId
+        (comment) => comment.parentId
       );
       state.commentsLoading = false;
     },
-    [getComments.pending]: (state: any) => {
+    [getComments.pending]: (state) => {
       state.commentsLoading = true;
     },
-    [deleteTweet.fulfilled]: (state: any, action) => {
-      states.forEach((key: string) => {
+    [deleteTweet.fulfilled]: (state, action: PayloadAction<Tweet>) => {
+      states.forEach((key) => {
         state[key] = state[key].filter(
-          (tweet: any) => tweet._id !== action.payload._id
+          (tweet) => tweet._id !== action.payload._id
         );
       });
-      state.singleTweet = {};
+      state.singleTweet = null;
       state.loading = false;
     },
-    [deleteTweet.pending]: (state: any) => {
+    [deleteTweet.pending]: (state) => {
       state.loading = true;
     },
-    [editTweet.fulfilled]: (state: any, action) => {
-      states.forEach((key: string) => {
-        state[key] = state[key].map((tweet: any) =>
+    [editTweet.fulfilled]: (state, action: PayloadAction<Tweet>) => {
+      states.forEach((key) => {
+        state[key] = state[key].map((tweet) =>
           tweet._id === action.payload._id ? action.payload : tweet
         );
       });
 
-      if (state.singleTweet._id === action.payload._id)
+      if (state.singleTweet?._id === action.payload._id)
         state.singleTweet = action.payload;
       state.editing = false;
     },
-    [editTweet.pending]: (state: any) => {
+    [editTweet.pending]: (state) => {
       state.editing = true;
     },
-    [editTweet.rejected]: (state: any, action) => {
+    [editTweet.rejected]: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
       state.editing = false;
     },
-    [deleteComment.fulfilled]: (state: any, action) => {
-      states.forEach((key: string) => {
-        state[key] = state[key].map((tweet: any) =>
+    [deleteComment.fulfilled]: (state, action: PayloadAction<Comment>) => {
+      states.forEach((key) => {
+        state[key] = state[key].map((tweet) =>
           commentUpdate(tweet, action.payload, true)
         );
       });
 
       state.singleTweetComments = state.singleTweetComments.filter(
-        (comment: any) => comment._id !== action.payload._id
+        (comment) => comment._id !== action.payload._id
       );
       state.commentReplies = state.commentReplies.filter(
-        (comment: any) => comment._id !== action.payload._id
+        (comment) => comment._id !== action.payload._id
       );
-      state.singleTweet.statistics.commentCount =
-        state.singleTweet.statistics.commentCount - 1;
+      if (state.singleTweet)
+        state.singleTweet.statistics.commentCount =
+          state.singleTweet.statistics.commentCount - 1;
+
       state.commentsLoading = false;
     },
-    [deleteComment.pending]: (state: any) => {
+    [deleteComment.pending]: (state) => {
       state.commentsLoading = true;
     },
-    [deleteComment.rejected]: (state: any, action) => {
+    [deleteComment.rejected]: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
       state.commentsLoading = false;
     },

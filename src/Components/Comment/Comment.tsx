@@ -1,16 +1,16 @@
 import { Comment } from "antd";
 import { deleteComment } from "app/features";
-import { AddCommentBox } from "Components/AddCommentBox/AddCommentBox";
+import { useAppDispatch, useAppSelector } from "app/store";
+import { AddCommentBox } from "Components";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 const CommentBox = (props: any) => {
   const [replyEditor, setReplyEditor] = useState(false);
-  const dispatch = useDispatch();
-  const authUserId = useSelector((state: any) => state.auth.user._id);
-  const commentReplies = useSelector(
-    (state: any) => state.tweets.commentReplies
-  ).filter((reply: any) => reply.parentId === props._id);
+  const dispatch = useAppDispatch();
+  const authUserId = useAppSelector((state) => state.auth.user?._id);
+  const commentReplies = useAppSelector(
+    (state) => state.tweets.commentReplies
+  ).filter((reply) => reply.parentId === props._id);
 
   const closeEditor = () => setReplyEditor(false);
   const actions = [

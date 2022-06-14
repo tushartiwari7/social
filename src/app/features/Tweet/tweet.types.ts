@@ -14,16 +14,25 @@ type Tweet = {
   updatedAt?: string;
   user: User;
   _id: string;
-}; // TODO: type this
+};
 
-type Comment = any; // TODO: type this
+type Comment = {
+  body: string;
+  parentId: string | null;
+  photoUrl: string;
+  user: string;
+  username: string;
+  post: string;
+  _id: string;
+};
+
 type TweetSlice = {
   feedTweets: Tweet[];
   allTweets: Tweet[];
   userTweets: Tweet[];
   singleTweet: Tweet | null;
-  singleTweetComments: Comment[]; // TODO: type this
-  commentReplies: Comment[]; // TODO: type this
+  singleTweetComments: Comment[];
+  commentReplies: Comment[];
   loading: boolean;
   editing: boolean;
   commentsLoading: boolean;
