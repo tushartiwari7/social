@@ -132,7 +132,6 @@ export const tweetSlice = createSlice({
           stateUpdate(tweet, action.payload)
         );
       });
-
       if (state.singleTweet?._id === action.payload._id)
         state.singleTweet = action.payload;
       state.loading = false;

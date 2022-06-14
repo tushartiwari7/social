@@ -60,7 +60,7 @@ type BookmarkedPost = Omit<Tweet, "user"> & {
   };
 };
 
-type Bookmark = {
+export type Bookmark = {
   createdAt: string;
   post: BookmarkedPost;
   user: string;

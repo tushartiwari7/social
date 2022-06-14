@@ -103,7 +103,7 @@ export const likeTweet: any = createAsyncThunk(
   async (tweetId: string, { rejectWithValue }) => {
     try {
       const { data } = await axiosCall("/tweet/like/" + tweetId, "post");
-      if (data.success) return data.like.post;
+      if (data.success) return data?.like?.post;
     } catch (error: any) {
       return rejectWithValue(error.response.data.message);
     }

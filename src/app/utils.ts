@@ -1,5 +1,7 @@
 import axios from "axios";
+import { Bookmark } from "./features";
 import { User } from "./features/Auth/authSlice.types";
+import { Comment, DislikeTweet, Tweet } from "./features/Tweet/tweet.types";
 
 /**
  * @description: This function is used to make a REQUEST to the backend server
@@ -23,6 +25,12 @@ export type AxiosError = {
   };
 };
 
+type LikeResponse = {
+  user: string;
+  post: Tweet;
+  _id: string;
+};
+
 type AxiosResponse = {
   data: {
     success: boolean;
@@ -30,13 +38,13 @@ type AxiosResponse = {
     user?: User;
     followee?: User;
     users?: User[];
-    tweet?: any;
-    tweets?: any[]; // TODO: add type
-    bookmarks?: any[]; // TODO: add type
-    bookmark: any; // TODO: add type
-    like?: any; // TODO: add type
-    comment?: any; // TODO: add type
-    comments?: any[]; // TODO: add type
+    tweet?: Tweet;
+    tweets?: Tweet[];
+    bookmarks?: Bookmark[];
+    bookmark: Bookmark;
+    like?: LikeResponse;
+    comment?: Comment;
+    comments?: Comment[];
     message?: string;
   };
   status: number;
@@ -65,18 +73,18 @@ export async function axiosCall(
   }
 }
 
-export const stateUpdate: any = (tweet: any, response: any) => {
+export const stateUpdate = (tweet: Tweet, response: Tweet) => {
   if (tweet._id === response._id) {
     return response;
   }
   return tweet;
 };
 
-export const dislikeUpdate = (tweet: any, response: any) => {
+export const dislikeUpdate = (tweet: Tweet, response: DislikeTweet) => {
   if (tweet._id === response.post) {
     return {
       ...tweet,
-      likes: tweet.likes.filter((like: string) => like !== response.user),
+      likes: tweet.likes.filter((like) => like !== response.user),
       statistics: {
         ...tweet.statistics,
         likeCount: tweet.statistics.likeCount - 1,
@@ -87,8 +95,8 @@ export const dislikeUpdate = (tweet: any, response: any) => {
 };
 
 export const commentUpdate = (
-  tweet: any,
-  response: any,
+  tweet: Tweet,
+  response: Comment,
   decrement: boolean = false
 ) => {
   if (tweet._id === response.post) {
