@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   deleteTweet,
   dislikeTweet,
@@ -6,6 +6,7 @@ import {
   likeTweet,
 } from "./Tweet/tweetThunk";
 import { axiosCall } from "app/utils";
+import { DislikeTweet, Tweet } from "./Tweet/tweet.types";
 
 export const bookmarkTweet: any = createAsyncThunk(
   "bookmark/add",
@@ -48,31 +49,49 @@ export const getBookmarks: any = createAsyncThunk(
   }
 );
 
+type BookmarkedPost = Omit<Tweet, "user"> & {
+  user: {
+    name: string;
+    photo: {
+      _id?: string;
+      secure_url: string;
+    };
+    _id: string;
+  };
+};
+
+type Bookmark = {
+  createdAt: string;
+  post: BookmarkedPost;
+  user: string;
+  _id: string;
+};
+
+const initialState: Bookmark[] = [];
+
 export const bookmarkSlice = createSlice({
   name: "bookmarks",
-  initialState: [],
+  initialState,
   reducers: {},
   extraReducers: {
-    [bookmarkTweet.fulfilled]: (state: any, action) => {
+    [bookmarkTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
       state.unshift(action.payload);
     },
-    [removeBookmark.fulfilled]: (state: any, action) => {
+    [removeBookmark.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+      state = state.filter((bookmark) => bookmark._id !== action.payload._id);
+      return state;
+    },
+    [deleteTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
       state = state.filter(
-        (bookmark: any) => bookmark._id !== action.payload._id
+        (bookmark) => bookmark.post._id !== action.payload._id
       );
       return state;
     },
-    [deleteTweet.fulfilled]: (state: any, action) => {
-      state = state.filter(
-        (bookmark: any) => bookmark.post._id !== action.payload._id
-      );
-      return state;
-    },
-    [getBookmarks.fulfilled]: (state: any, action) => {
+    [getBookmarks.fulfilled]: (state, action: PayloadAction<Bookmark[]>) => {
       state.push(...action.payload);
     },
-    [likeTweet.fulfilled]: (state: any, action) => {
-      state = state.map((tweet: any) => {
+    [likeTweet.fulfilled]: (state, action: PayloadAction<BookmarkedPost>) => {
+      state = state.map((tweet) => {
         if (tweet.post._id === action.payload._id) {
           tweet.post = action.payload;
           return tweet;
@@ -80,13 +99,13 @@ export const bookmarkSlice = createSlice({
         return tweet;
       });
     },
-    [dislikeTweet.fulfilled]: (state: any, action) => {
-      state = state.map((tweet: any) => {
+    [dislikeTweet.fulfilled]: (state, action: PayloadAction<DislikeTweet>) => {
+      state = state.map((tweet) => {
         if (tweet.post._id === action.payload.post) {
           tweet.post = {
             ...tweet.post,
             likes: tweet.post.likes.filter(
-              (like: string) => like !== action.payload.user
+              (like) => like !== action.payload.user
             ),
             statistics: {
               ...tweet.post.statistics,
@@ -98,8 +117,8 @@ export const bookmarkSlice = createSlice({
         return tweet;
       });
     },
-    [editTweet.fulfilled]: (state: any, action) => {
-      state = state.map((tweet: any) =>
+    [editTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+      state = state.map((tweet) =>
         tweet._id === action.payload._id ? action.payload : tweet
       );
     },

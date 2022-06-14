@@ -127,8 +127,6 @@ export const tweetSlice = createSlice({
       state.loading = true;
     },
     [likeTweet.fulfilled]: (state, action: PayloadAction<Tweet>) => {
-      console.log(action.payload);
-
       states.forEach((key) => {
         state[key] = state[key].map((tweet) =>
           stateUpdate(tweet, action.payload)

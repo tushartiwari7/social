@@ -1,6 +1,5 @@
 import { Button, Divider, Empty, Space, Typography } from "antd";
-import { FC, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { UserTweets } from "./UserTweets/UserTweets";
 import { EditUserModal } from "./EditUserModal/EditUserModal";
@@ -10,7 +9,7 @@ import "./UserProfile.css";
 import { useAppDispatch, useAppSelector } from "app/store";
 const { Title } = Typography;
 
-export const UserProfile: FC = () => {
+export const UserProfile = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
