@@ -7,25 +7,26 @@ import { EditUserModal } from "./EditUserModal/EditUserModal";
 import { followUser, getUserTweets, unfollowUser } from "app/features";
 import { EnvironmentOutlined, PaperClipOutlined } from "@ant-design/icons";
 import "./UserProfile.css";
+import { useAppDispatch, useAppSelector } from "app/store";
 const { Title } = Typography;
 
 export const UserProfile: FC = () => {
-  const location: any = useLocation();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
   const { pathname } = location;
   const [visible, setVisible] = useState(false);
-  const auth = useSelector((state: any) => state.auth);
-  const users = useSelector((state: any) => state.users);
-  const dispatch = useDispatch();
+  const auth = useAppSelector((state) => state.auth);
+  const users = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
 
-  let user = users.find((user: any) =>
+  let user = users.find((user) =>
     pathname.split("/")[2].length < 15
-      ? user.username === pathname.split("/")[2]
-      : user._id === pathname.split("/")[2]
+      ? user?.username === pathname.split("/")[2]
+      : user?._id === pathname.split("/")[2]
   );
 
-  const isAdmin = user?.username === auth.user.username;
+  const isAdmin = user?.username === auth.user?.username;
   if (isAdmin) user = auth.user;
 
   const isFollowing = auth?.user?.followings?.some(
