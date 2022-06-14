@@ -1,4 +1,5 @@
 import axios from "axios";
+import { User } from "./features/Auth/authSlice.types";
 
 /**
  * @description: This function is used to make a REQUEST to the backend server
@@ -7,32 +8,64 @@ import axios from "axios";
  * @param {type} data?: object
  * @returns: Promise
  */
-export const axiosCall: any = async (
+
+export type AxiosError = {
+  code: "ERR_BAD_REQUEST" | "ERR_BAD_RESPONSE";
+  message: string;
+  name: string;
+  response: {
+    data: {
+      success: boolean;
+      message: string;
+    };
+    status: number;
+    statusText: string;
+  };
+};
+
+type AxiosResponse = {
+  data: {
+    success: boolean;
+    token?: string;
+    user?: User;
+    followee?: User;
+    users?: User[];
+    tweet?: any;
+    tweets?: any[]; // TODO: add type
+    bookmarks?: any[]; // TODO: add type
+    bookmark: any; // TODO: add type
+    like?: any; // TODO: add type
+    comment?: any; // TODO: add type
+    comments?: any[]; // TODO: add type
+    message?: string;
+  };
+  status: number;
+  statusText: string;
+};
+
+export async function axiosCall(
   url: string,
   method: string,
   data?: any
-) => {
+): Promise<AxiosResponse> {
   try {
-    const response = await axios({
+    const response: AxiosResponse = await axios({
       method,
-      url:"https://social-app-twitter.herokuapp.com/api/v1" + url,
-      // url:
-      //   (window.location.hostname === "localhost"
-      //     ? "http://localhost:4000/api/v1"
-          // : "https://social-app-twitter.herokuapp.com/api/v1") + url,
+      url: "https://social-app-twitter.herokuapp.com/api/v1" + url,
       data,
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
     });
+    console.log(response.data);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     return error;
   }
-};
+}
 
-export const stateUpdate = (tweet: any, response: any) => {
+export const stateUpdate: any = (tweet: any, response: any) => {
   if (tweet._id === response._id) {
     return response;
   }

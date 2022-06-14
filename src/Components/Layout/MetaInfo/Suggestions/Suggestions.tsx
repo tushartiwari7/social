@@ -1,10 +1,10 @@
 import { List, Divider } from "antd";
-import { useSelector } from "react-redux";
 import { UserCard } from "Components";
+import { useAppSelector } from "app/store";
 
 export const Suggestions = () => {
-  const userId = useSelector((state: any) => state.auth.user._id);
-  const allUsers = useSelector((state: any) => state.users);
+  const userId = useAppSelector((state) => state.auth.user?._id);
+  const allUsers = useAppSelector((state) => state.users);
   const users = allUsers
     .slice(allUsers.length - 7)
     .filter((user: any) => user._id !== userId)
@@ -22,7 +22,7 @@ export const Suggestions = () => {
           margin: "0 5px",
           padding: "1rem",
         }}
-        renderItem={(item: any) => <UserCard person={item} />}
+        renderItem={(item) => <UserCard person={item} />}
       />
     </>
   );

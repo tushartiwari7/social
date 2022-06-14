@@ -2,7 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import auth from "./features/Auth/authSlice";
 import users from "./features/userSlice";
-import tweets from "./features/tweetSlice";
+import tweets from "./features/Tweet/tweetSlice";
 import bookmarks from "./features/bookmarkSlice";
 
 export const store = configureStore({

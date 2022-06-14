@@ -11,7 +11,6 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FC, useState } from "react";
 import "./ListItem.css";
-import { useDispatch, useSelector } from "react-redux";
 import {
   bookmarkTweet,
   deleteTweet,
@@ -20,6 +19,7 @@ import {
   removeBookmark,
 } from "app/features";
 import { EditTweetModal } from "Components";
+import { useAppDispatch, useAppSelector } from "app/store";
 
 type iconType = {
   Icon: FC;
@@ -40,12 +40,12 @@ export const ListItem = (tweet: any) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
-  const authUser = useSelector((state: any) => state.auth.user);
-  const bookmarks = useSelector((state: any) => state.bookmarks);
+  const dispatch = useAppDispatch();
+  const authUser = useAppSelector((state) => state.auth.user);
+  const bookmarks = useAppSelector((state) => state.bookmarks);
 
-  const isAuthUserPost = authUser._id === tweet.user._id;
-  const isLiked = tweet.likes.includes(authUser._id);
+  const isAuthUserPost: boolean = authUser?._id === tweet.user._id;
+  const isLiked: boolean = tweet.likes.includes(authUser?._id);
   const isBookmarked = bookmarks.some(
     (item: any) => item.post._id === tweet._id
   );

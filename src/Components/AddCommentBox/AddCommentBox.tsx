@@ -1,7 +1,7 @@
 import { Form, Button, Mentions } from "antd";
 import { addComment } from "app/features";
+import { useAppDispatch, useAppSelector } from "app/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 type commentBox = {
   parentId?: string;
@@ -12,17 +12,17 @@ export const AddCommentBox = ({ parentId = "", close }: commentBox) => {
   const [form] = Form.useForm();
   const [prefix, setPrefix] = useState("@");
   const onSearch = (_: string, value: string) => setPrefix(value);
-  const postId = useSelector((state: any) => state.tweets.singleTweet._id);
-  const allUsers = useSelector((state: any) => state.users).map(
-    (user: any) => user.username
+  const postId = useAppSelector((state) => state.tweets.singleTweet?._id);
+  const allUsers = useAppSelector(
+    (state) => state.users.map((user: any) => user.username) // TODO: fix any type of this
   );
   const mentions: any = {
     "@": allUsers,
     "#": ["javascript", "reactjs", "typescript"],
   };
-  const dispatch = useDispatch();
-  const commentsLoading = useSelector(
-    (state: any) => state.tweets.commentsLoading
+  const dispatch = useAppDispatch();
+  const commentsLoading = useAppSelector(
+    (state) => state.tweets.commentsLoading
   );
   const onReset = () => {
     form.resetFields();

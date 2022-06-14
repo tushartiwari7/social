@@ -1,6 +1,5 @@
 // React Hooks
 import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 // Feature: Tweet
 import { getComments, getSingleTweet } from "app/features";
@@ -8,31 +7,32 @@ import { getComments, getSingleTweet } from "app/features";
 import { AddCommentBox, Comment, ListItem } from "Components";
 import { Comment as AntdComment, Avatar, Divider, List } from "antd";
 import "./Tweet.css";
+import { useAppDispatch, useAppSelector } from "app/store";
 
 type commentList = {
-  comments: [];
+  comments: any[];
 };
 
 const CommentList = ({ comments }: commentList) => {
-  const commentsLoading = useSelector(
-    (state: any) => state.tweets.commentsLoading
+  const commentsLoading = useAppSelector(
+    (state) => state.tweets.commentsLoading
   );
   return (
     <List
       dataSource={comments}
       loading={commentsLoading}
-      renderItem={(props: any) => <Comment {...props} />}
+      renderItem={(props) => <Comment {...props} />}
     />
   );
 };
 
 export const Tweet: FC = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const tweetId = location.pathname.split("/").pop();
-  const authUser = useSelector((state: any) => state.auth.user);
-  const { singleTweet, loading, singleTweetComments } = useSelector(
-    (state: any) => state.tweets
+  const authUser = useAppSelector((state) => state.auth.user);
+  const { singleTweet, loading, singleTweetComments } = useAppSelector(
+    (state) => state.tweets
   );
 
   useEffect(() => {
@@ -47,31 +47,35 @@ export const Tweet: FC = () => {
 
   return (
     <div className="tweet-page">
-      <List
-        itemLayout="vertical"
-        size="large"
-        className="tweet-list"
-        style={{ overflow: "auto", flexGrow: 1 }}
-        dataSource={[singleTweet]}
-        loading={loading}
-        renderItem={(item) => item._id && <ListItem {...item} />}
-      ></List>
-      <Divider orientation="left">
-        Recent Comments ({singleTweet?.statistics?.commentCount})
-      </Divider>
-      {singleTweetComments.length > 0 && (
-        <CommentList comments={singleTweetComments} />
-      )}
-      <AntdComment
-        avatar={
-          <Avatar
-            src={authUser?.photo?.secure_url}
-            alt={authUser?.name}
+      {singleTweet && (
+        <>
+          <List
+            itemLayout="vertical"
             size="large"
+            className="tweet-list"
+            style={{ overflow: "auto", flexGrow: 1 }}
+            dataSource={[singleTweet]}
+            loading={loading}
+            renderItem={(item) => item && <ListItem {...item} />}
+          ></List>
+          <Divider orientation="left">
+            Recent Comments ({singleTweet?.statistics?.commentCount})
+          </Divider>
+          {singleTweetComments.length > 0 && (
+            <CommentList comments={singleTweetComments} />
+          )}
+          <AntdComment
+            avatar={
+              <Avatar
+                src={authUser?.photo?.secure_url}
+                alt={authUser?.name}
+                size="large"
+              />
+            }
+            content={<AddCommentBox />}
           />
-        }
-        content={<AddCommentBox />}
-      />
+        </>
+      )}
     </div>
   );
 };

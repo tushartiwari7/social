@@ -1,14 +1,14 @@
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { getAllUsers, getBookmarks, login } from "app/features";
-import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useAppDispatch } from "app/store";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
-export const Login: FC = () => {
+export const Login = () => {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const onFinish = async (values: any) => {
     setLoading(true);

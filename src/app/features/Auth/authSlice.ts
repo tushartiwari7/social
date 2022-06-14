@@ -11,7 +11,7 @@ import {
 } from "./authThunk";
 
 const initialState: AuthState = {
-  user: {},
+  user: null,
   isLoggedIn: false,
   loginStatus: "idle",
   error: "",
@@ -34,7 +34,7 @@ export const authState = createSlice({
       state.loginStatus = "succeeded";
     },
     [login.rejected]: (state, action: PayloadAction<User>) => {
-      state.user = {};
+      state.user = null;
       state.isLoggedIn = false;
       state.loginStatus = "failed";
       return action.payload;
@@ -45,7 +45,7 @@ export const authState = createSlice({
       state.loginStatus = "succeeded";
     },
     [getAuthUser.rejected]: (state) => {
-      state.user = {};
+      state.user = null;
       state.isLoggedIn = false;
       state.loginStatus = "failed";
     },
@@ -55,7 +55,7 @@ export const authState = createSlice({
       state.loginStatus = "succeeded";
     },
     [signup.rejected]: (state) => {
-      state.user = {};
+      state.user = null;
       state.isLoggedIn = false;
       state.loginStatus = "failed";
     },
