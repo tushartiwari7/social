@@ -1,23 +1,27 @@
 import { Button, Checkbox, Form, Input, message, Typography } from "antd";
 import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "app/features";
 import "./Signup.css";
+import { signupData } from "app/features/Auth/authSlice.types";
+import { useAppDispatch } from "app/store";
 export const Signup: FC = () => {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: signupData) => {
     setLoading(true);
-    const resp = await dispatch(signup(values));
-    if (resp.error?.message === "Rejected") {
-      message.error(resp.payload);
-    } else {
-      message.success("Signup successfully");
-      navigate("/");
+    try {
+      const resp = await dispatch(signup(values)).unwrap();
+      if (resp?._id) {
+        message.success("Signup successfully");
+        navigate("/");
+      }
+    } catch (error) {
+      message.error("Oops!, Signup Failed.");
     }
+
     setLoading(false);
   };
 

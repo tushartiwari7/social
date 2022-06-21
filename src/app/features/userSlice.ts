@@ -72,7 +72,7 @@ export const userState = createSlice({
       state = action.payload;
       return state;
     },
-    [signup.fulfilled]: (state, action: PayloadAction<User>) => {
+    [signup.fulfilled.toString()]: (state, action: PayloadAction<User>) => {
       state.push(action.payload);
       return state;
     },

@@ -19,17 +19,17 @@ export const UserProfile = () => {
   const users = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
-  let user = users.find((user) =>
-    pathname.split("/")[2].length < 15
+  let user = users.find((user) => {
+    return pathname.split("/")[2].length < 15
       ? user?.username === pathname.split("/")[2]
-      : user?._id === pathname.split("/")[2]
-  );
+      : user?._id === pathname.split("/")[2];
+  });
 
   const isAdmin = user?.username === auth.user?.username;
   if (isAdmin) user = auth.user;
 
   const isFollowing = auth?.user?.followings?.some(
-    (following: string) => following === user?._id
+    (following) => following === user?._id
   );
 
   const followHandler = async () => {

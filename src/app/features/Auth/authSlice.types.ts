@@ -1,4 +1,5 @@
-type User = {
+type ValidUser = {
+  responseType?: "SUCCESS";
   username: string;
   _id: string;
   createdAt: string;
@@ -15,7 +16,9 @@ type User = {
     secure_url: string;
   };
   website?: string;
-} | null;
+};
+
+type User = ValidUser | null;
 
 type AuthState = {
   user: User;
@@ -29,4 +32,16 @@ type FollowAction = {
   followee: User;
 };
 
-export { User, AuthState, FollowAction };
+type loginData = {
+  email: string;
+  password: string;
+};
+
+type signupData = {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+};
+
+export { ValidUser, User, AuthState, FollowAction, loginData, signupData };

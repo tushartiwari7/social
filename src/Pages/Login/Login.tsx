@@ -1,23 +1,27 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { getAllUsers, getBookmarks, login } from "app/features";
-import { useState } from "react";
 import { useAppDispatch } from "app/store";
-import { Link, useNavigate } from "react-router-dom";
+import { loginData, User } from "app/features/Auth/authSlice.types";
 import "./Login.css";
 
 export const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const onFinish = async (values: any) => {
+
+  const onFinish = async (values: loginData) => {
     setLoading(true);
     try {
-      await dispatch(login(values));
-      await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
-      navigate("/");
-      message.success("Logged in successfully");
-    } catch (error) {
+      const user = await dispatch(login(values)).unwrap();
+      if (user?._id) {
+        await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
+        navigate("/");
+        message.success("Logged in successfully");
+      }
+    } catch (_) {
       message.error("Oops!, Login Failed.");
     }
     setLoading(false);
@@ -80,8 +84,10 @@ export const Login = () => {
               href="#"
               onClick={() => {
                 onFinish({
-                  email: process.env.REACT_APP_GUEST_MAIL,
-                  password: process.env.REACT_APP_GUEST_PASSWORD,
+                  email:
+                    process.env.REACT_APP_GUEST_MAIL || "guestuser@gmail.com",
+                  password:
+                    process.env.REACT_APP_GUEST_PASSWORD || "PBQeApy1D5",
                 });
               }}
             >

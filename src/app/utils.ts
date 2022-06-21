@@ -31,7 +31,7 @@ type LikeResponse = {
   _id: string;
 };
 
-type AxiosResponse = {
+export type AxiosResponse = {
   data: {
     success: boolean;
     token?: string;
