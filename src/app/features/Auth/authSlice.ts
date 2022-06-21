@@ -68,21 +68,29 @@ export const authState = createSlice({
       state.isLoggedIn = false;
       state.loginStatus = "failed";
     },
-    [updateUser.fulfilled]: (state, action: PayloadAction<User>) => {
+    [updateUser.fulfilled.toString()]: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.loginStatus = "succeeded";
     },
-    [updateUser.rejected]: (state) => (state.error = "Update User failed"),
-    [followUser.fulfilled]: (state, action: PayloadAction<FollowAction>) => {
+    [updateUser.rejected.toString()]: (state) =>
+      (state.error = "Update User failed"),
+    [followUser.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<FollowAction>
+    ) => {
       state.user = action.payload.user;
     },
-    [followUser.rejected]: (state) => (state.error = "Failed to follow user"),
-    [unfollowUser.fulfilled]: (state, action: PayloadAction<FollowAction>) => {
+    [followUser.rejected.toString()]: (state) =>
+      (state.error = "Failed to follow user"),
+    [unfollowUser.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<FollowAction>
+    ) => {
       state.user = action.payload.user;
     },
-    [unfollowUser.rejected]: (state) =>
+    [unfollowUser.rejected.toString()]: (state) =>
       (state.error = "Failed to unfollow user"),
-    [getUser.fulfilled]: (state, action: PayloadAction<User>) => {
+    [getUser.fulfilled.toString()]: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isLoggedIn = true;
     },

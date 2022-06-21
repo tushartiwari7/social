@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input, message, Typography } from "antd";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "app/features";
 import "./Signup.css";

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosCall } from "app/utils";
-import { loginData, signupData, User } from "./authSlice.types";
+import { FollowAction, loginData, signupData, User } from "./authSlice.types";
 export const login = createAsyncThunk<
   User,
   loginData,
@@ -42,65 +42,56 @@ export const getAuthUser = createAsyncThunk<
   return rejectWithValue(data.message ?? "Failed to Load User Profile");
 });
 
-export const getUser: any = createAsyncThunk(
-  "auth/getUser",
-  async (userId: string) => {
-    try {
-      const { data }: any = await axiosCall("/user/" + userId, "get");
-      if (data.success) return data.user;
-    } catch (error: any) {
-      console.error({ error });
-      return Promise.reject(error.response.data.message);
-    }
+export const getUser = createAsyncThunk<
+  User,
+  string,
+  {
+    rejectValue: string;
   }
-);
+>("auth/getUser", async (userId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/" + userId, "get");
+  if (data.success) return data.user as User;
+  return rejectWithValue(data.message ?? "Failed to load User Details.");
+});
 
-export const updateUser: any = createAsyncThunk(
-  "auth/updateUser",
-  async (userData: any, { rejectWithValue }) => {
-    try {
-      const { data }: any = await axiosCall(
-        "/user/update_user_details",
-        "post",
-        userData
-      );
-      if (data.success) return data.user;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
+export const updateUser = createAsyncThunk<
+  User,
+  FormData,
+  {
+    rejectValue: string;
   }
-);
+>("auth/updateUser", async (userData, { rejectWithValue }) => {
+  const { data } = await axiosCall(
+    "/user/update_user_details",
+    "post",
+    userData
+  );
+  if (data.success) return data.user as User;
+  return rejectWithValue(data.message ?? "Failed To Update User");
+});
 
-export const followUser: any = createAsyncThunk(
-  "auth/followUser",
-  async (followeeId: string, { rejectWithValue }) => {
-    try {
-      const { data }: any = await axiosCall(
-        "/user/follow/" + followeeId,
-        "put"
-      );
-      if (data.success) {
-        return { user: data.user, followee: data.followee };
-      }
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
+export const followUser = createAsyncThunk<
+  FollowAction,
+  string,
+  {
+    rejectValue: string;
   }
-);
+>("auth/followUser", async (followeeId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/follow/" + followeeId, "put");
+  if (data.success) {
+    return { user: data.user, followee: data.followee } as FollowAction;
+  }
+  return rejectWithValue(data.message ?? "Unable to Follow User!");
+});
 
-export const unfollowUser: any = createAsyncThunk(
-  "auth/unfollowUser",
-  async (followeeId: string, thunkAPI: any) => {
-    try {
-      const { data }: any = await axiosCall(
-        "/user/unfollow/" + followeeId,
-        "patch"
-      );
-      if (data.success) {
-        return { user: data.user, followee: data.followee };
-      }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
-    }
+export const unfollowUser = createAsyncThunk<
+  FollowAction,
+  string,
+  { rejectValue: string }
+>("auth/unfollowUser", async (followeeId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/unfollow/" + followeeId, "patch");
+  if (data.success) {
+    return { user: data.user, followee: data.followee } as FollowAction;
   }
-);
+  return rejectWithValue(data.message ?? "Unable to UnFollow User!");
+});

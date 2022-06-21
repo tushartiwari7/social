@@ -4,7 +4,7 @@ import { Button, Checkbox, Form, Input, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { getAllUsers, getBookmarks, login } from "app/features";
 import { useAppDispatch } from "app/store";
-import { loginData, User } from "app/features/Auth/authSlice.types";
+import { loginData } from "app/features/Auth/authSlice.types";
 import "./Login.css";
 
 export const Login = () => {

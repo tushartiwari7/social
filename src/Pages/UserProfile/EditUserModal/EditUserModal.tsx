@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "app/store";
 import { updateUser } from "app/features";
 type propTypes = {
   visible: boolean;
@@ -17,7 +17,7 @@ type propTypes = {
 export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
   const [loading, setLoading] = useState(false);
   const formData = new FormData();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [userInput, setUserInput] = useState({
     name: user?.name,
     bio: user?.bio,

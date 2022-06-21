@@ -1,15 +1,15 @@
 import { Avatar, List, Switch } from "antd";
 import { followUser, unfollowUser } from "app/features";
+import { useAppDispatch, useAppSelector } from "app/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 export const UserCard = ({ person, searchResult = false }: any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
 
   const [loading, setLoading] = useState(false);
-  const auth = useSelector((state: any) => state.auth);
+  const auth = useAppSelector((state) => state.auth);
 
   const isFollowing = auth?.user?.followings?.some(
     (id: string) => id === person?._id
@@ -17,10 +17,10 @@ export const UserCard = ({ person, searchResult = false }: any) => {
 
   const followHandler = async () => {
     setLoading(true);
-    if (isFollowing) {
-      await dispatch(unfollowUser(person?._id));
-    } else {
-      await dispatch(followUser(person?._id));
+    if (person) {
+      isFollowing
+        ? await dispatch(unfollowUser(person?._id))
+        : await dispatch(followUser(person?._id));
     }
     setLoading(false);
   };

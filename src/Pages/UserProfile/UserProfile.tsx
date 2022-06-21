@@ -34,10 +34,10 @@ export const UserProfile = () => {
 
   const followHandler = async () => {
     setLoading(true);
-    if (isFollowing) {
-      await dispatch(unfollowUser(user?._id));
-    } else {
-      await dispatch(followUser(user?._id));
+    if (user) {
+      isFollowing
+        ? await dispatch(unfollowUser(user._id))
+        : await dispatch(followUser(user._id));
     }
     setLoading(false);
   };
