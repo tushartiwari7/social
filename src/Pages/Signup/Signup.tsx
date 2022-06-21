@@ -5,7 +5,7 @@ import { signup } from "app/features";
 import "./Signup.css";
 import { signupData } from "app/features/Auth/authSlice.types";
 import { useAppDispatch } from "app/store";
-export const Signup: FC = () => {
+export const Signup = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export const Signup: FC = () => {
   const onFinish = async (values: signupData) => {
     setLoading(true);
     try {
+      // dispatch returns a PayloadAction and .unwrap returns the payload of that action (fullfilled or rejected)
       const resp = await dispatch(signup(values)).unwrap();
       if (resp?._id) {
         message.success("Signup successfully");
@@ -21,7 +22,6 @@ export const Signup: FC = () => {
     } catch (error) {
       message.error("Oops!, Signup Failed.");
     }
-
     setLoading(false);
   };
 

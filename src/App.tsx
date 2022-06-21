@@ -14,7 +14,7 @@ const App = () => {
     if (!auth.isLoggedIn) {
       if (localStorage.getItem("token")) {
         (async () => {
-          await dispatch(getAuthUser());
+          await dispatch(getAuthUser()).unwrap();
           await Promise.all([
             dispatch(getAllUsers()),
             dispatch(getBookmarks()),

@@ -29,17 +29,18 @@ export const signup = createAsyncThunk<
   return rejectWithValue(data.message ?? "Signup Failed, Please Try Again.");
 });
 
-export const getAuthUser: any = createAsyncThunk(
-  "auth/user",
-  async (_, thunkAPI: any) => {
-    try {
-      const { data }: any = await axiosCall("/user/profile", "get");
-      if (data.success) return data.user;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
-    }
+export const getAuthUser = createAsyncThunk<
+  User,
+  null | undefined,
+  {
+    rejectValue: string;
   }
-);
+>("auth/user", async (_, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/profile", "get");
+  if (data.success) return data.user as User;
+
+  return rejectWithValue(data.message ?? "Failed to Load User Profile");
+});
 
 export const getUser: any = createAsyncThunk(
   "auth/getUser",

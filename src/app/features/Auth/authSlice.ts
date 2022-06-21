@@ -45,12 +45,15 @@ export const authState = createSlice({
       state.loginStatus = "failed";
       return action.payload;
     },
-    [getAuthUser.fulfilled]: (state, action: PayloadAction<User>) => {
+    [getAuthUser.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<User>
+    ) => {
       state.user = action.payload;
       state.isLoggedIn = true;
       state.loginStatus = "succeeded";
     },
-    [getAuthUser.rejected]: (state) => {
+    [getAuthUser.rejected.toString()]: (state) => {
       state.user = null;
       state.isLoggedIn = false;
       state.loginStatus = "failed";
