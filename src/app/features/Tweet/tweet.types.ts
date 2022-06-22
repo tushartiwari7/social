@@ -26,6 +26,10 @@ type Comment = {
   _id: string;
 };
 
+type CommentList = {
+  comments: Comment[];
+};
+
 type TweetSlice = {
   feedTweets: Tweet[];
   allTweets: Tweet[];
@@ -46,4 +50,4 @@ type DislikeTweet = {
 };
 
 type TweetTypes = "feedTweets" | "allTweets" | "userTweets";
-export { TweetSlice, TweetTypes, Tweet, DislikeTweet, Comment };
+export { TweetSlice, TweetTypes, Tweet, DislikeTweet, Comment, CommentList };

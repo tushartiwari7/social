@@ -1,7 +1,7 @@
 import { Button, Checkbox, Form, Input, message, Typography } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "app/features";
+import { getAllUsers, getBookmarks, signup } from "app/features";
 import "./Signup.css";
 import { signupData } from "app/features/Auth/authSlice.types";
 import { useAppDispatch } from "app/store";
@@ -16,6 +16,7 @@ export const Signup = () => {
       // dispatch returns a PayloadAction and .unwrap returns the payload of that action (fullfilled or rejected)
       const resp = await dispatch(signup(values)).unwrap();
       if (resp?._id) {
+        await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
         message.success("Signup successfully");
         navigate("/");
       }

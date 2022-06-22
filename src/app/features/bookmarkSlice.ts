@@ -8,46 +8,35 @@ import {
 import { axiosCall } from "app/utils";
 import { DislikeTweet, Tweet } from "./Tweet/tweet.types";
 
-export const bookmarkTweet: any = createAsyncThunk(
-  "bookmark/add",
-  async (tweetId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/user/bookmark/" + tweetId, "post");
-      if (data.success) return data.bookmark;
-    } catch (error: any) {
-      return rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const bookmarkTweet = createAsyncThunk<
+  Bookmark,
+  string,
+  { rejectValue: string }
+>("bookmark/add", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/bookmark/" + tweetId, "post");
+  if (data.success) return data.bookmark as Bookmark;
+  return rejectWithValue(data.message ?? "Failed To Bookmark Tweet");
+});
 
-export const removeBookmark: any = createAsyncThunk(
-  "bookmark/remove",
-  async (bookmarkId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall(
-        "/user/bookmark/" + bookmarkId,
-        "delete"
-      );
-      if (data.success) return data.bookmark;
-    } catch (error: any) {
-      return rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const removeBookmark = createAsyncThunk<
+  Bookmark,
+  string,
+  { rejectValue: string }
+>("bookmark/remove", async (bookmarkId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/bookmark/" + bookmarkId, "delete");
+  if (data.success) return data.bookmark as Bookmark;
+  return rejectWithValue(data.message ?? "Failed to remove from Bookmarks.");
+});
 
-export const getBookmarks: any = createAsyncThunk(
-  "user/getBookmark",
-  async () => {
-    try {
-      const { data } = await axiosCall("/user/bookmarks", "get");
-      if (data.success) {
-        return data.bookmarks;
-      }
-    } catch (error: any) {
-      return Promise.reject(error.data.response.message);
-    }
-  }
-);
+export const getBookmarks = createAsyncThunk<
+  Bookmark[],
+  null | undefined,
+  { rejectValue: string }
+>("user/getBookmark", async (_, { rejectWithValue }) => {
+  const { data } = await axiosCall("/user/bookmarks", "get");
+  if (data.success) return data.bookmarks as Bookmark[];
+  return rejectWithValue(data.message ?? "Failed to load Bookmarks.");
+});
 
 type BookmarkedPost = Omit<Tweet, "user"> & {
   user: {
@@ -74,10 +63,16 @@ export const bookmarkSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [bookmarkTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+    [bookmarkTweet.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<Bookmark>
+    ) => {
       state.unshift(action.payload);
     },
-    [removeBookmark.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+    [removeBookmark.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<Bookmark>
+    ) => {
       state = state.filter((bookmark) => bookmark._id !== action.payload._id);
       return state;
     },
@@ -87,7 +82,10 @@ export const bookmarkSlice = createSlice({
       );
       return state;
     },
-    [getBookmarks.fulfilled]: (state, action: PayloadAction<Bookmark[]>) => {
+    [getBookmarks.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<Bookmark[]>
+    ) => {
       state.push(...action.payload);
     },
     [likeTweet.fulfilled]: (state, action: PayloadAction<BookmarkedPost>) => {

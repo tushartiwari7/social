@@ -11,6 +11,7 @@ import { Comment, DislikeTweet, Tweet } from "./features/Tweet/tweet.types";
  * @returns: Promise
  */
 
+// TODO: Not using currently will be using after refactoring axios calls part. - if that day comes ;)
 export type AxiosError = {
   code: "ERR_BAD_REQUEST" | "ERR_BAD_RESPONSE";
   message: string;
@@ -38,6 +39,8 @@ export type AxiosResponse = {
     user?: User;
     followee?: User;
     users?: User[];
+    followings?: User[];
+    followers?: User[];
     tweet?: Tweet;
     tweets?: Tweet[];
     bookmarks?: Bookmark[];
@@ -72,6 +75,11 @@ export async function axiosCall(
     return error;
   }
 }
+
+export const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) return error.message;
+  return String(error);
+};
 
 export const stateUpdate = (tweet: Tweet, response: Tweet) => {
   if (tweet._id === response._id) {

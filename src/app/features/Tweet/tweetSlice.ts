@@ -58,7 +58,7 @@ export const tweetSlice = createSlice({
     sort: sortBy,
   },
   extraReducers: {
-    [postTweet.fulfilled]: postTweetFulfilled,
+    [postTweet.fulfilled.toString()]: postTweetFulfilled,
     [getFeed.fulfilled]: getFeedFulfilled,
     [getFeed.pending]: pendingState,
     [getUserTweets.fulfilled]: getUserTweetsFulfilled,
@@ -76,12 +76,12 @@ export const tweetSlice = createSlice({
     [dislikeTweet.fulfilled]: dislikeTweetFulfilled,
     [dislikeTweet.pending]: pendingState,
     [dislikeTweet.rejected]: dislikeTweetRejected,
-    [addComment.fulfilled]: addCommentFulfilled,
-    [addComment.pending]: (state) => {
+    [addComment.fulfilled.toString()]: addCommentFulfilled,
+    [addComment.pending.toString()]: (state) => {
       state.commentsLoading = true;
     },
-    [getComments.fulfilled]: getCommentsFulfilled,
-    [getComments.pending]: (state) => {
+    [getComments.fulfilled.toString()]: getCommentsFulfilled,
+    [getComments.pending.toString()]: (state) => {
       state.commentsLoading = true;
     },
     [deleteTweet.fulfilled]: deleteTweetFulfilled,

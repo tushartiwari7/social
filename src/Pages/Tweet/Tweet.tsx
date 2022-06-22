@@ -1,19 +1,18 @@
 // React Hooks
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+
 // Feature: Tweet
 import { getComments, getSingleTweet } from "app/features";
+
 // Design: Tweet
 import { AddCommentBox, Comment, ListItem } from "Components";
 import { Comment as AntdComment, Avatar, Divider, List } from "antd";
 import "./Tweet.css";
 import { useAppDispatch, useAppSelector } from "app/store";
+import { CommentList } from "app/features/Tweet/tweet.types";
 
-type commentList = {
-  comments: any[];
-};
-
-const CommentList = ({ comments }: commentList) => {
+const Comments = ({ comments }: CommentList) => {
   const commentsLoading = useAppSelector(
     (state) => state.tweets.commentsLoading
   );
@@ -26,7 +25,7 @@ const CommentList = ({ comments }: commentList) => {
   );
 };
 
-export const Tweet: FC = () => {
+export const Tweet = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const tweetId = location.pathname.split("/").pop();
@@ -37,13 +36,13 @@ export const Tweet: FC = () => {
 
   useEffect(() => {
     (async () => {
-      await Promise.all([
-        dispatch(getSingleTweet(tweetId)),
-        dispatch(getComments(tweetId)),
-      ]);
+      tweetId &&
+        (await Promise.all([
+          dispatch(getSingleTweet(tweetId)),
+          dispatch(getComments(tweetId)),
+        ]));
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tweetId]);
+  }, [dispatch, tweetId]);
 
   return (
     <div className="tweet-page">
@@ -62,7 +61,7 @@ export const Tweet: FC = () => {
             Recent Comments ({singleTweet?.statistics?.commentCount})
           </Divider>
           {singleTweetComments.length > 0 && (
-            <CommentList comments={singleTweetComments} />
+            <Comments comments={singleTweetComments} />
           )}
           <AntdComment
             avatar={

@@ -8,15 +8,24 @@ type commentBox = {
   close?: () => void;
 };
 
-export const AddCommentBox = ({ parentId = "", close }: commentBox) => {
+export const AddCommentBox = ({ parentId, close }: commentBox) => {
   const [form] = Form.useForm();
-  const [prefix, setPrefix] = useState("@");
-  const onSearch = (_: string, value: string) => setPrefix(value);
+  const [prefix, setPrefix] = useState<string>("@");
+  const onSearch = (text: string, prefix: string) => setPrefix(prefix);
   const postId = useAppSelector((state) => state.tweets.singleTweet?._id);
-  const allUsers = useAppSelector(
-    (state) => state.users.map((user: any) => user.username) // TODO: fix any type of this
+  const allUsers = useAppSelector((state) =>
+    state.users.reduce((acc, user) => {
+      if (user && user._id) return [...acc, user.username];
+      return acc;
+    }, [] as string[])
   );
-  const mentions: any = {
+
+  type mentionsType = {
+    "@": string[];
+    "#": string[];
+  };
+
+  const mentions: mentionsType = {
     "@": allUsers,
     "#": ["javascript", "reactjs", "typescript"],
   };
@@ -54,11 +63,12 @@ export const AddCommentBox = ({ parentId = "", close }: commentBox) => {
           prefix={["@", "#"]}
           onSearch={onSearch}
         >
-          {(mentions[prefix] || []).map((value: string) => (
-            <Mentions.Option key={value} value={value}>
-              {value}
-            </Mentions.Option>
-          ))}
+          {(prefix === "@" || prefix === "#") &&
+            mentions[prefix].map((value) => (
+              <Mentions.Option key={value} value={value}>
+                {value}
+              </Mentions.Option>
+            ))}
         </Mentions>
       </Form.Item>
       <Form.Item>

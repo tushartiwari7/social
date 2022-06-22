@@ -1,20 +1,20 @@
-import { FC, useEffect, useState } from "react";
-import { Avatar, Space, Button, Upload, List, message } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { useEffect, useState } from "react";
+import { Avatar, Space, Button, Upload, List, message, Input } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import "./Feed.css";
-import { ListItem } from "Components";
-import { useDispatch, useSelector } from "react-redux";
-import { getFeed, postTweet } from "app/features";
 
-export const Feed: FC = () => {
-  const auth = useSelector((state: any) => state.auth);
+import { useAppDispatch, useAppSelector } from "app/store";
+import { getFeed, postTweet } from "app/features";
+import { ListItem } from "Components";
+import "./Feed.css";
+
+export const Feed = () => {
+  const authUser = useAppSelector((state) => state.auth.user);
   const formData = new FormData();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const tweets = useSelector((state: any) => state.tweets);
+  const tweets = useAppSelector((state) => state.tweets);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const beforeUpload = (file: any) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
@@ -29,10 +29,12 @@ export const Feed: FC = () => {
 
   const onFinish = async () => {
     setLoading(true);
-    formData.set("description", text);
-    formData.set("userPhoto", auth.user.photo.secure_url);
-    formData.set("userName", auth.user.name);
-    await dispatch(postTweet(formData));
+    if (authUser) {
+      formData.set("description", text);
+      formData.set("userPhoto", authUser.photo.secure_url);
+      formData.set("userName", authUser.name);
+      await dispatch(postTweet(formData));
+    }
     setLoading(false);
     setText("");
   };
@@ -48,9 +50,9 @@ export const Feed: FC = () => {
     <List
       header={
         <Space className="tweet-input">
-          <Avatar size={64} src={auth.user?.photo?.secure_url} />
+          <Avatar size={64} src={authUser?.photo?.secure_url} />
           <Space className="text-area" direction="vertical">
-            <TextArea
+            <Input.TextArea
               placeholder="What's happening?"
               autoSize={{ minRows: 2, maxRows: 6 }}
               value={text}

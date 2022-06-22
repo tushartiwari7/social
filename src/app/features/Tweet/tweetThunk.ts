@@ -1,29 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosCall } from "app/utils";
+import { Comment, Tweet } from "./tweet.types";
 
-export const addComment: any = createAsyncThunk(
-  "post/comment",
-  async (comment, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/post/comment", "POST", comment);
-      if (data.success) return data.comment;
-    } catch (error: any) {
-      rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const addComment = createAsyncThunk<
+  Comment,
+  Partial<Omit<Comment, "post"> & { postId: string | undefined }>,
+  { rejectValue: string }
+>("post/comment", async (comment, { rejectWithValue }) => {
+  const { data } = await axiosCall("/post/comment", "POST", comment);
+  if (data.success) return data.comment as Comment;
+  return rejectWithValue(data.message ?? "Failed to Post Comment.");
+});
 
-export const getComments: any = createAsyncThunk(
-  "post/getComments",
-  async (tweetId, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/post/comment/" + tweetId, "get");
-      if (data.success) return data.comments;
-    } catch (error: any) {
-      rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const getComments = createAsyncThunk<
+  Comment[],
+  string,
+  { rejectValue: string }
+>("post/getComments", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/post/comment/" + tweetId, "get");
+  if (data.success) return data.comments as Comment[];
+  return rejectWithValue(data.message ?? "Failed to load Comments.");
+});
 
 export const deleteComment: any = createAsyncThunk(
   "post/deleteComment",
@@ -37,17 +34,17 @@ export const deleteComment: any = createAsyncThunk(
   }
 );
 
-export const postTweet: any = createAsyncThunk(
-  "tweet/post",
-  async (tweet: any, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets", "post", tweet);
-      if (data.success) return data.tweet;
-    } catch (error: any) {
-      return rejectWithValue(error.data.response.message);
-    }
+export const postTweet = createAsyncThunk<
+  Tweet,
+  FormData,
+  {
+    rejectValue: string;
   }
-);
+>("tweet/post", async (tweet, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets", "post", tweet);
+  if (data.success) return data.tweet as Tweet;
+  return rejectWithValue(data.message ?? "Failed to post Tweet, Try Again.");
+});
 
 export const getUserTweets: any = createAsyncThunk(
   "tweet/getUserTweets",
