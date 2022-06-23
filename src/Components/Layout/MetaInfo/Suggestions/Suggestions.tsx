@@ -7,7 +7,7 @@ export const Suggestions = () => {
   const allUsers = useAppSelector((state) => state.users);
   const users = allUsers
     .slice(allUsers.length - 7)
-    .filter((user: any) => user._id !== userId)
+    .filter((user) => user?._id !== userId)
     .reverse();
 
   return (

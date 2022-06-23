@@ -115,7 +115,10 @@ export const bookmarkSlice = createSlice({
         return tweet;
       });
     },
-    [editTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+    [editTweet.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<Bookmark>
+    ) => {
       state = state.map((tweet) =>
         tweet._id === action.payload._id ? action.payload : tweet
       );

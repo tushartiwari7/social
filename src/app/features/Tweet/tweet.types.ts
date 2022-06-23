@@ -14,6 +14,7 @@ type Tweet = {
   updatedAt?: string;
   user: User;
   _id: string;
+  image?: { id: string; url: string };
 };
 
 type Comment = {

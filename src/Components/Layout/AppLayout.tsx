@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { MetaInfo } from "./MetaInfo/MetaInfo";
 import { Layout } from "antd";
@@ -15,7 +14,7 @@ import {
 } from "Pages";
 import "./AppLayout.css";
 
-export const AppLayout: FC = () => {
+export const AppLayout = () => {
   return (
     <Layout className="layout">
       <Sidebar />

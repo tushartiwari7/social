@@ -1,3 +1,7 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FC, SyntheticEvent, useState } from "react";
+import { useAppDispatch, useAppSelector } from "app/store";
+
 import { Image, Avatar, List, message, Space } from "antd";
 import {
   StarOutlined,
@@ -8,9 +12,7 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FC, useState } from "react";
-import "./ListItem.css";
+
 import {
   bookmarkTweet,
   deleteTweet,
@@ -19,12 +21,13 @@ import {
   removeBookmark,
 } from "app/features";
 import { EditTweetModal } from "Components";
-import { useAppDispatch, useAppSelector } from "app/store";
+import "./ListItem.css";
+import { Tweet } from "app/features/Tweet/tweet.types";
 
 type iconType = {
   Icon: FC;
   text: number;
-  onClick?: (e: any) => void;
+  onClick?: (e: SyntheticEvent) => void;
 };
 
 const IconText = ({ Icon, text, onClick }: iconType) => (
@@ -34,7 +37,7 @@ const IconText = ({ Icon, text, onClick }: iconType) => (
   </Space>
 );
 
-export const ListItem = (tweet: any) => {
+export const ListItem = (tweet: Tweet) => {
   const [editTweetModalVisible, setEditTweetModalVisible] = useState(false);
   const closeModal = () => setEditTweetModalVisible(false);
 
@@ -44,11 +47,11 @@ export const ListItem = (tweet: any) => {
   const authUser = useAppSelector((state) => state.auth.user);
   const bookmarks = useAppSelector((state) => state.bookmarks);
 
-  const isAuthUserPost: boolean = authUser?._id === tweet.user._id;
-  const isLiked: boolean = tweet.likes.includes(authUser?._id);
-  const isBookmarked = bookmarks.some(
-    (item: any) => item.post._id === tweet._id
-  );
+  const isAuthUserPost = authUser?._id === tweet.user?._id;
+  const isLiked: boolean = authUser
+    ? tweet.likes.includes(authUser._id)
+    : false;
+  const isBookmarked = bookmarks.some((item) => item.post._id === tweet._id);
 
   const createdAt = new Intl.DateTimeFormat("en-IN", {
     dateStyle: "medium",
@@ -131,19 +134,20 @@ export const ListItem = (tweet: any) => {
           )
         }
         onClick={() => {
-          navigate(`/u/${tweet.user._id}/tweet/${tweet._id}`, {
-            state: { from: location },
-          });
+          tweet.user &&
+            navigate(`/u/${tweet.user._id}/tweet/${tweet._id}`, {
+              state: { from: location },
+            });
         }}
       >
         <List.Item.Meta
-          avatar={<Avatar src={tweet.user.photo?.secure_url} />}
+          avatar={<Avatar src={tweet.user?.photo?.secure_url} />}
           title={
             <Link
-              to={`/u/${tweet.user._id}`}
+              to={`/u/${tweet.user?._id}`}
               onClick={(e) => e.stopPropagation()}
             >
-              {tweet.user.name}
+              {tweet.user?.name}
             </Link>
           }
           description={createdAt}
