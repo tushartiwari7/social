@@ -76,7 +76,10 @@ export const bookmarkSlice = createSlice({
       state = state.filter((bookmark) => bookmark._id !== action.payload._id);
       return state;
     },
-    [deleteTweet.fulfilled]: (state, action: PayloadAction<Bookmark>) => {
+    [deleteTweet.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<Bookmark>
+    ) => {
       state = state.filter(
         (bookmark) => bookmark.post._id !== action.payload._id
       );
@@ -88,7 +91,10 @@ export const bookmarkSlice = createSlice({
     ) => {
       state.push(...action.payload);
     },
-    [likeTweet.fulfilled]: (state, action: PayloadAction<BookmarkedPost>) => {
+    [likeTweet.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<BookmarkedPost>
+    ) => {
       state = state.map((tweet) => {
         if (tweet.post._id === action.payload._id) {
           tweet.post = action.payload;
@@ -97,7 +103,10 @@ export const bookmarkSlice = createSlice({
         return tweet;
       });
     },
-    [dislikeTweet.fulfilled]: (state, action: PayloadAction<DislikeTweet>) => {
+    [dislikeTweet.fulfilled.toString()]: (
+      state,
+      action: PayloadAction<DislikeTweet>
+    ) => {
       state = state.map((tweet) => {
         if (tweet.post._id === action.payload.post) {
           tweet.post = {

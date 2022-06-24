@@ -26,7 +26,7 @@ export type AxiosError = {
   };
 };
 
-type LikeResponse = {
+export type LikeResponse = {
   user: string;
   post: Tweet;
   _id: string;
@@ -69,7 +69,6 @@ export async function axiosCall(
         "Content-Type": "application/json",
       },
     });
-    console.log(response.data);
     return response;
   } catch (error: any) {
     return error;

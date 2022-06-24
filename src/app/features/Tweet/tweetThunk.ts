@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosCall } from "app/utils";
+import { axiosCall, LikeResponse } from "app/utils";
 import { Comment, Tweet } from "./tweet.types";
 
 export const addComment = createAsyncThunk<
@@ -22,17 +22,17 @@ export const getComments = createAsyncThunk<
   return rejectWithValue(data.message ?? "Failed to load Comments.");
 });
 
-export const deleteComment: any = createAsyncThunk(
-  "post/deleteComment",
-  async (commentId, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/post/comment/" + commentId, "delete");
-      if (data.success) return data.comment;
-    } catch (error: any) {
-      rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const deleteComment = createAsyncThunk<
+  Comment,
+  string,
+  { rejectValue: string }
+>("post/deleteComment", async (commentId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/post/comment/" + commentId, "delete");
+  if (data.success) return data.comment as Comment;
+  return rejectWithValue(
+    data.message ?? "Deleting Comment Failed! Try Again Later."
+  );
+});
 
 export const postTweet = createAsyncThunk<
   Tweet,
@@ -46,104 +46,99 @@ export const postTweet = createAsyncThunk<
   return rejectWithValue(data.message ?? "Failed to post Tweet, Try Again.");
 });
 
-export const getUserTweets: any = createAsyncThunk(
-  "tweet/getUserTweets",
-  async (userId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets/userTweets/" + userId, "get");
-      if (data.success) return data.tweets;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const getUserTweets = createAsyncThunk<
+  Tweet[],
+  string,
+  { rejectValue: string }
+>("tweet/getUserTweets", async (userId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets/userTweets/" + userId, "get");
+  if (data.success) return data.tweets as Tweet[];
+  return rejectWithValue(data.message ?? "Failed to fetch this user's tweets");
+});
 
-export const getFeed: any = createAsyncThunk(
-  "tweet/feed",
-  async (state, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets/feed", "get");
-      if (data.success) return data.tweets;
-      throw new Error(data.message);
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const getFeed = createAsyncThunk<
+  Tweet[],
+  null | undefined,
+  { rejectValue: string }
+>("tweet/feed", async (_, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets/feed", "get");
+  if (data.success) return data.tweets as Tweet[];
+  return rejectWithValue(
+    data.message ?? "Failed to Fetch User Feed, Try Again Later."
+  );
+});
 
-export const getAllTweets: any = createAsyncThunk(
-  "tweet/getAllTweets",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets", "get");
-      if (data.success) return data.tweets;
-    } catch (error: any) {
-      return rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const getAllTweets = createAsyncThunk<
+  Tweet[],
+  null | undefined,
+  { rejectValue: string }
+>("tweet/getAllTweets", async (_, { rejectWithValue }) => {
+  // try {
+  const { data } = await axiosCall("/tweets", "get");
+  if (data.success) return data.tweets as Tweet[];
+  return rejectWithValue(data.message ?? "Failed to Fetch Explore Feed.");
+});
 
-export const getSingleTweet: any = createAsyncThunk(
-  "tweet/single",
-  async (tweetId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets/" + tweetId, "get");
-      if (data.success) return data.tweet;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const getSingleTweet = createAsyncThunk<
+  Tweet,
+  string,
+  { rejectValue: string }
+>("tweet/single", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets/" + tweetId, "get");
+  if (data.success) return data.tweet as Tweet;
+  return rejectWithValue(
+    data.message ?? "Failed to Fetch This Tweet, Try again"
+  );
+});
 
-export const likeTweet: any = createAsyncThunk(
-  "tweet/like",
-  async (tweetId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweet/like/" + tweetId, "post");
-      if (data.success) return data?.like?.post;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const likeTweet = createAsyncThunk<
+  Tweet,
+  string,
+  { rejectValue: string }
+>("tweet/like", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweet/like/" + tweetId, "post");
+  if (data.success && data.like && data.like.post)
+    return data.like.post as Tweet;
+  return rejectWithValue(data.message ?? "Unable to Like Post");
+});
 
-export const dislikeTweet: any = createAsyncThunk(
-  "tweet/dislike",
-  async (tweetId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweet/like/" + tweetId, "delete");
-      if (data.success) return data.like;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const dislikeTweet = createAsyncThunk<
+  LikeResponse,
+  string,
+  { rejectValue: string }
+>("tweet/dislike", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweet/like/" + tweetId, "delete");
+  if (data.success) return data.like as LikeResponse;
+  return rejectWithValue(
+    data.message ?? "Dislike Tweet failed, please try again later."
+  );
+});
 
-export const deleteTweet: any = createAsyncThunk(
-  "tweet/delete",
-  async (tweetId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets/" + tweetId, "delete");
-      if (data.success) return data.tweet;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
+export const deleteTweet = createAsyncThunk<
+  Tweet,
+  string,
+  { rejectValue: string }
+>("tweet/delete", async (tweetId, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets/" + tweetId, "delete");
+  if (data.success) return data.tweet as Tweet;
+  return rejectWithValue(
+    data.message ?? "Deleting Tweet Failed, please try again later"
+  );
+});
 
 type editTweetType = {
   tweetId: string;
-  formData?: any;
+  formData?: FormData;
 };
 
-export const editTweet: any = createAsyncThunk(
-  "tweet/edit",
-  async ({ tweetId, formData }: editTweetType, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosCall("/tweets/" + tweetId, "put", formData);
-      if (data.success) return data.tweet;
-    } catch (error: any) {
-      return rejectWithValue(error.data.response.message);
-    }
-  }
-);
+export const editTweet = createAsyncThunk<
+  Tweet,
+  editTweetType,
+  { rejectValue: string }
+>("tweet/edit", async ({ tweetId, formData }, { rejectWithValue }) => {
+  const { data } = await axiosCall("/tweets/" + tweetId, "put", formData);
+  if (data.success) return data.tweet as Tweet;
+  return rejectWithValue(
+    data.message ?? "Failed to Update Tweet, please try again"
+  );
+});

@@ -59,23 +59,23 @@ export const tweetSlice = createSlice({
   },
   extraReducers: {
     [postTweet.fulfilled.toString()]: postTweetFulfilled,
-    [getFeed.fulfilled]: getFeedFulfilled,
-    [getFeed.pending]: pendingState,
-    [getUserTweets.fulfilled]: getUserTweetsFulfilled,
-    [getAllTweets.fulfilled]: getAllTweetsFulfilled,
-    [getAllTweets.pending]: pendingState,
-    [getAllTweets.rejected]: getAllTweetsRejected,
-    [getUserTweets.rejected]: getUserTweetsRejected,
-    [getUserTweets.pending]: pendingState,
-    [getSingleTweet.fulfilled]: getSingleTweetFulfilled,
-    [getSingleTweet.rejected]: getSingleTweetRejected,
-    [getSingleTweet.pending]: pendingState,
-    [likeTweet.fulfilled]: likeTweetFulfilled,
-    [likeTweet.pending]: pendingState,
-    [likeTweet.rejected]: likeTweetRejected,
-    [dislikeTweet.fulfilled]: dislikeTweetFulfilled,
-    [dislikeTweet.pending]: pendingState,
-    [dislikeTweet.rejected]: dislikeTweetRejected,
+    [getFeed.fulfilled.toString()]: getFeedFulfilled,
+    [getFeed.pending.toString()]: pendingState,
+    [getAllTweets.fulfilled.toString()]: getAllTweetsFulfilled,
+    [getAllTweets.pending.toString()]: pendingState,
+    [getAllTweets.rejected.toString()]: getAllTweetsRejected,
+    [getUserTweets.fulfilled.toString()]: getUserTweetsFulfilled,
+    [getUserTweets.rejected.toString()]: getUserTweetsRejected,
+    [getUserTweets.pending.toString()]: pendingState,
+    [getSingleTweet.fulfilled.toString()]: getSingleTweetFulfilled,
+    [getSingleTweet.rejected.toString()]: getSingleTweetRejected,
+    [getSingleTweet.pending.toString()]: pendingState,
+    [likeTweet.fulfilled.toString()]: likeTweetFulfilled,
+    [likeTweet.pending.toString()]: pendingState,
+    [likeTweet.rejected.toString()]: likeTweetRejected,
+    [dislikeTweet.fulfilled.toString()]: dislikeTweetFulfilled,
+    [dislikeTweet.pending.toString()]: pendingState,
+    [dislikeTweet.rejected.toString()]: dislikeTweetRejected,
     [addComment.fulfilled.toString()]: addCommentFulfilled,
     [addComment.pending.toString()]: (state) => {
       state.commentsLoading = true;
@@ -84,18 +84,18 @@ export const tweetSlice = createSlice({
     [getComments.pending.toString()]: (state) => {
       state.commentsLoading = true;
     },
-    [deleteTweet.fulfilled]: deleteTweetFulfilled,
-    [deleteTweet.pending]: pendingState,
-    [editTweet.fulfilled]: editTweetFulfilled,
-    [editTweet.pending]: (state) => {
+    [deleteTweet.fulfilled.toString()]: deleteTweetFulfilled,
+    [deleteTweet.pending.toString()]: pendingState,
+    [editTweet.fulfilled.toString()]: editTweetFulfilled,
+    [editTweet.pending.toString()]: (state) => {
       state.editing = true;
     },
-    [editTweet.rejected]: editTweetRejected,
-    [deleteComment.fulfilled]: deleteCommentFulfilled,
-    [deleteComment.pending]: (state) => {
+    [editTweet.rejected.toString()]: editTweetRejected,
+    [deleteComment.fulfilled.toString()]: deleteCommentFulfilled,
+    [deleteComment.pending.toString()]: (state) => {
       state.commentsLoading = true;
     },
-    [deleteComment.rejected]: deleteCommentRejected,
+    [deleteComment.rejected.toString()]: deleteCommentRejected,
   },
 });
 export const { sort } = tweetSlice.actions;
