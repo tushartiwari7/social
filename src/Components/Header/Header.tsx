@@ -3,12 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader, Radio, Typography } from "antd";
 import { sort } from "app/features";
 import { useAppDispatch, useAppSelector } from "app/store";
-
-type MyLocation = {
-  from: {
-    pathname: string;
-  };
-};
+import { MyLocation } from "helpers.types";
 
 export const Header = () => {
   const location = useLocation();
@@ -31,7 +26,7 @@ export const Header = () => {
     else return user?.name ?? (urlParams[urlParams.length - 1] || "Home");
   };
 
-  const locationState = location.state as MyLocation | undefined;
+  const locationState = location.state as MyLocation;
 
   useEffect(() => {
     return () => setDefaultValue("");

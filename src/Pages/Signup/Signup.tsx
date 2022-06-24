@@ -26,8 +26,8 @@ export const Signup = () => {
     setLoading(false);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    message.error("Failed:", errorInfo);
+  const onFinishFailed = () => {
+    message.error("Failed to send the signup request.");
   };
 
   return (

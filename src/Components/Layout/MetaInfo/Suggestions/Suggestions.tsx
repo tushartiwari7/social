@@ -16,6 +16,7 @@ export const Suggestions = () => {
       <List
         itemLayout="horizontal"
         dataSource={users}
+        loading={!users.length}
         style={{
           border: "1px solid var(--bg-color)",
           borderRadius: "15px",

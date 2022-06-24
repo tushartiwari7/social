@@ -27,8 +27,8 @@ export const Login = () => {
     setLoading(false);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    message.error("Failed", errorInfo);
+  const onFinishFailed = () => {
+    message.error("Failed to send Login Request.");
   };
 
   return (

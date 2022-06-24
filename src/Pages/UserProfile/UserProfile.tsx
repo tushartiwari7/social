@@ -12,9 +12,10 @@ const { Title } = Typography;
 export const UserProfile = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const { pathname } = location;
   const [visible, setVisible] = useState(false);
+  const toggle = (value: boolean) => setVisible(value);
   const auth = useAppSelector((state) => state.auth);
   const users = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
@@ -43,8 +44,8 @@ export const UserProfile = () => {
   };
 
   useEffect(() => {
-    const current: any = ref.current;
-    current.scrollTo(0, 0);
+    const current = ref.current;
+    current?.scrollTo(0, 0);
 
     // getUserTweets
     if (user) {
@@ -73,11 +74,7 @@ export const UserProfile = () => {
             >
               {isAdmin ? "Edit Profile" : isFollowing ? "Unfollow" : "Follow"}
             </Button>
-            <EditUserModal
-              visible={visible}
-              setVisible={setVisible}
-              user={user}
-            />
+            <EditUserModal visible={visible} setVisible={toggle} user={user} />
           </div>
           <div className="user-info">
             <Title level={4}>{user.name}</Title>

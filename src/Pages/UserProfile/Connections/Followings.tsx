@@ -6,23 +6,26 @@ import { UserCard } from "Components";
 import { useEffect, useState } from "react";
 
 type props = {
-  userId: string;
+  userId: string | undefined;
 };
 
 export const Followings = ({ userId }: props) => {
   const [list, setList] = useState<User[]>([]);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    (async () => {
-      const followingList = await dispatch(getFollowings(userId)).unwrap();
-      setList(followingList);
-    })();
+    if (userId) {
+      (async (id) => {
+        const followerList = await dispatch(getFollowings(id)).unwrap();
+        setList(followerList);
+      })(userId);
+    }
   }, [dispatch, userId]);
 
   return (
     <List
       itemLayout="horizontal"
       dataSource={list}
+      loading={!list.length}
       style={{
         border: "1px solid var(--bg-color)",
         borderRadius: "15px",

@@ -6,16 +6,18 @@ import { useAppDispatch, useAppSelector } from "app/store";
 import { getFeed, postTweet } from "app/features";
 import { ListItem } from "Components";
 import "./Feed.css";
+import { RcFile } from "antd/lib/upload";
 
 export const Feed = () => {
-  const authUser = useAppSelector((state) => state.auth.user);
   const formData = new FormData();
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const tweets = useAppSelector((state) => state.tweets);
+  const authUser = useAppSelector((state) => state.auth.user);
 
   const dispatch = useAppDispatch();
-  const beforeUpload = (file: any) => {
+
+  const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
@@ -81,7 +83,7 @@ export const Feed = () => {
       style={{ overflow: "auto", flexGrow: 1 }}
       dataSource={tweets.feedTweets}
       loading={tweets.loading}
-      renderItem={(item: any) => <ListItem {...item} key={item?._id} />}
+      renderItem={(item) => <ListItem {...item} key={item?._id} />}
     ></List>
   );
 };
