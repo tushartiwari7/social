@@ -38,11 +38,11 @@ export const Header = () => {
       onBack={() => navigate(locationState ? locationState.from.pathname : "/")}
       title={getTitle()}
       extra={
-        location.pathname === "/" ||
-        location.pathname === "/Home" ||
-        (location.pathname.split("/")[1] === "u" &&
-          location.pathname.split("/").length <= 3) ||
-        (location.pathname === "/Explore" && (
+        (location.pathname === "/" ||
+          location.pathname === "/Home" ||
+          location.pathname === "/Explore" ||
+          (location.pathname.split("/")[1] === "u" &&
+            location.pathname.split("/").length <= 3)) && (
           <>
             <Typography.Text> Sort By:</Typography.Text>
             <Radio.Group
@@ -57,7 +57,7 @@ export const Header = () => {
               <Radio.Button value="Oldest">Oldest</Radio.Button>
             </Radio.Group>
           </>
-        ))
+        )
       }
     />
   );

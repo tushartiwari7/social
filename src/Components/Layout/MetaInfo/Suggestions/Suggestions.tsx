@@ -5,10 +5,7 @@ import { useAppSelector } from "app/store";
 export const Suggestions = () => {
   const userId = useAppSelector((state) => state.auth.user?._id);
   const allUsers = useAppSelector((state) => state.users);
-  const users = allUsers
-    .slice(allUsers.length - 7)
-    .filter((user) => user?._id !== userId)
-    .reverse();
+  const users = allUsers.filter((user) => user?._id !== userId).reverse();
 
   return (
     <>
