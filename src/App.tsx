@@ -1,19 +1,20 @@
 import { getAllUsers, getAuthUser, getBookmarks } from "app/features";
+import { useAppDispatch, useAppSelector } from "app/store";
 import { Login, Signup } from "Pages";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import { AppLayout as Layout } from "./Components";
-const App: React.FC = () => {
+
+const App = () => {
   const navigate = useNavigate();
-  const auth = useSelector((state: any) => state.auth);
-  const dispatch = useDispatch();
+  const auth = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (!auth.isLoggedIn) {
       if (localStorage.getItem("token")) {
         (async () => {
-          await dispatch(getAuthUser());
+          await dispatch(getAuthUser()).unwrap();
           await Promise.all([
             dispatch(getAllUsers()),
             dispatch(getBookmarks()),

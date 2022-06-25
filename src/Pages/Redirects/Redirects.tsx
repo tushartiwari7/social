@@ -1,32 +1,36 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "app/store";
+import { MyLocation } from "helpers.types";
 import { Navigate, useLocation } from "react-router-dom";
 
-export const Redirects: FC = () => {
-  const location: any = useLocation();
+export const Redirects = () => {
+  const location = useLocation();
   const { pathname } = location;
-  const auth = useSelector((state: any) => state.auth);
+  const user = useAppSelector((state) => state.auth.user);
+  const locationState = location.state as MyLocation;
 
   const getRedirectLink = (pathname: string) => {
+    if (!user) return "";
+
     switch (pathname) {
       case "/Profile":
-        return "/u/" + auth.user.username;
+        return "/u/" + user.username;
 
       case "/Followers":
-        return "/u/" + auth.user.username + "/connections?default=followers";
+        return "/u/" + user.username + "/connections?default=followers";
 
       case "/Followings":
-        return "/u/" + auth.user.username + "/connections?default=followings";
+        return "/u/" + user.username + "/connections?default=followings";
 
       default:
         return "/";
     }
   };
+
   return (
     <Navigate
       to={getRedirectLink(pathname)}
       replace
-      state={location.state?.from}
+      state={locationState?.from.pathname}
     />
   );
 };

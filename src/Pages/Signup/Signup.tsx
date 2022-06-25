@@ -1,28 +1,33 @@
 import { Button, Checkbox, Form, Input, message, Typography } from "antd";
-import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "app/features";
+import { getAllUsers, getBookmarks, signup } from "app/features";
 import "./Signup.css";
-export const Signup: FC = () => {
+import { signupData } from "app/features/Auth/authSlice.types";
+import { useAppDispatch } from "app/store";
+export const Signup = () => {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: signupData) => {
     setLoading(true);
-    const resp = await dispatch(signup(values));
-    if (resp.error?.message === "Rejected") {
-      message.error(resp.payload);
-    } else {
-      message.success("Signup successfully");
-      navigate("/");
+    try {
+      // dispatch returns a PayloadAction and .unwrap returns the payload of that action (fullfilled or rejected)
+      const resp = await dispatch(signup(values)).unwrap();
+      if (resp?._id) {
+        await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
+        message.success("Signup successfully");
+        navigate("/");
+      }
+    } catch (error) {
+      message.error("Oops!, Signup Failed.");
     }
     setLoading(false);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    message.error("Failed:", errorInfo);
+  const onFinishFailed = () => {
+    message.error("Failed to send the signup request.");
   };
 
   return (

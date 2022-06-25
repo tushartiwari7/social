@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { AutoComplete } from "antd";
-import { useDispatch } from "react-redux";
 import { searchUsers } from "app/features";
 import { UserCard } from "Components/UserCard/UserCard";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "app/store";
+import { User } from "app/features/Auth/authSlice.types";
 let timer: ReturnType<typeof setTimeout> | null;
 
-export const SearchUsers: React.FC = () => {
+export const SearchUsers = () => {
   const [value, setValue] = useState("");
-  const [options, setOptions] = useState([]);
-  const dispatch = useDispatch();
+  const [options, setOptions] = useState<User[]>([]);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const debounce = (search: string) => {
@@ -20,8 +21,8 @@ export const SearchUsers: React.FC = () => {
 
     timer = setTimeout(() => {
       (async () => {
-        const res = await dispatch(searchUsers(search));
-        setOptions(!search ? [] : res.payload);
+        const searchedUsersList = await dispatch(searchUsers(search)).unwrap();
+        setOptions(!search ? [] : searchedUsersList);
       })();
     }, 300);
   };
@@ -30,22 +31,20 @@ export const SearchUsers: React.FC = () => {
   const onChange = (data: string) => setValue(data);
 
   return (
-    <>
-      <AutoComplete
-        value={value}
-        onSelect={onSelect}
-        onSearch={debounce}
-        onChange={onChange}
-        className="search-users"
-        placeholder="Search Users"
-        listHeight={500}
-      >
-        {options.map((option: any) => (
-          <AutoComplete.Option key={option.username}>
-            <UserCard person={option} searchResult={true} />
-          </AutoComplete.Option>
-        ))}
-      </AutoComplete>
-    </>
+    <AutoComplete
+      value={value}
+      onSelect={onSelect}
+      onSearch={debounce}
+      onChange={onChange}
+      className="search-users"
+      placeholder="Search Users"
+      listHeight={500}
+    >
+      {options.map((option) => (
+        <AutoComplete.Option key={option?.username}>
+          <UserCard person={option} searchResult={true} />
+        </AutoComplete.Option>
+      ))}
+    </AutoComplete>
   );
 };

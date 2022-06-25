@@ -1,10 +1,9 @@
-import { FC } from "react";
 import { List } from "antd";
 import { ListItem } from "Components";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "app/store";
 
-export const UserTweets: FC = () => {
-  const tweets = useSelector((state: any) => state.tweets);
+export const UserTweets = () => {
+  const tweets = useAppSelector((state) => state.tweets);
   return (
     <List
       itemLayout="vertical"
@@ -13,7 +12,7 @@ export const UserTweets: FC = () => {
       style={{ overflow: "auto", flexGrow: 1 }}
       dataSource={tweets.userTweets}
       loading={tweets.loading}
-      renderItem={(item: any) => <ListItem {...item} />}
+      renderItem={(item) => <ListItem {...item} />}
     ></List>
   );
 };

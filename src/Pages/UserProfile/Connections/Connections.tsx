@@ -1,17 +1,16 @@
 import { Tabs } from "antd";
-import { FC } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "app/store";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import { Followers } from "./Followers";
 import { Followings } from "./Followings";
 
-export const Connections: FC = () => {
+export const Connections = () => {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const defaultTab = searchParams.get("default") || "followers";
   const user = pathname.split("/")[2];
-  const users = useSelector((state: any) => state.users);
-  const userDb = users.find((singleUser: any) => singleUser.username === user);
+  const users = useAppSelector((state) => state.users);
+  const userDb = users.find((anyUser) => anyUser?.username === user);
 
   return (
     <div className="connections">

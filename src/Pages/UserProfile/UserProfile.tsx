@@ -1,50 +1,51 @@
 import { Button, Divider, Empty, Space, Typography } from "antd";
-import { FC, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { UserTweets } from "./UserTweets/UserTweets";
 import { EditUserModal } from "./EditUserModal/EditUserModal";
 import { followUser, getUserTweets, unfollowUser } from "app/features";
 import { EnvironmentOutlined, PaperClipOutlined } from "@ant-design/icons";
 import "./UserProfile.css";
+import { useAppDispatch, useAppSelector } from "app/store";
 const { Title } = Typography;
 
-export const UserProfile: FC = () => {
-  const location: any = useLocation();
+export const UserProfile = () => {
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const { pathname } = location;
   const [visible, setVisible] = useState(false);
-  const auth = useSelector((state: any) => state.auth);
-  const users = useSelector((state: any) => state.users);
-  const dispatch = useDispatch();
+  const toggle = (value: boolean) => setVisible(value);
+  const auth = useAppSelector((state) => state.auth);
+  const users = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
 
-  let user = users.find((user: any) =>
-    pathname.split("/")[2].length < 15
-      ? user.username === pathname.split("/")[2]
-      : user._id === pathname.split("/")[2]
-  );
+  let user = users.find((user) => {
+    return pathname.split("/")[2].length < 15
+      ? user?.username === pathname.split("/")[2]
+      : user?._id === pathname.split("/")[2];
+  });
 
-  const isAdmin = user?.username === auth.user.username;
+  const isAdmin = user?.username === auth.user?.username;
   if (isAdmin) user = auth.user;
 
   const isFollowing = auth?.user?.followings?.some(
-    (following: string) => following === user?._id
+    (following) => following === user?._id
   );
 
   const followHandler = async () => {
     setLoading(true);
-    if (isFollowing) {
-      await dispatch(unfollowUser(user?._id));
-    } else {
-      await dispatch(followUser(user?._id));
+    if (user) {
+      isFollowing
+        ? await dispatch(unfollowUser(user._id))
+        : await dispatch(followUser(user._id));
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    const current: any = ref.current;
-    current.scrollTo(0, 0);
+    const current = ref.current;
+    current?.scrollTo(0, 0);
 
     // getUserTweets
     if (user) {
@@ -73,11 +74,7 @@ export const UserProfile: FC = () => {
             >
               {isAdmin ? "Edit Profile" : isFollowing ? "Unfollow" : "Follow"}
             </Button>
-            <EditUserModal
-              visible={visible}
-              setVisible={setVisible}
-              user={user}
-            />
+            <EditUserModal visible={visible} setVisible={toggle} user={user} />
           </div>
           <div className="user-info">
             <Title level={4}>{user.name}</Title>
