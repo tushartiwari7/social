@@ -10,9 +10,10 @@ import {
   BulbOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { logout } from "app/features";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "app/store";
 
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -21,7 +22,7 @@ export const Sidebar: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
   };

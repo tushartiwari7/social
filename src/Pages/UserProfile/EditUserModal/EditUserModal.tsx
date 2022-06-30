@@ -6,18 +6,21 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "app/store";
 import { updateUser } from "app/features";
+import { User } from "app/features/Auth/authSlice.types";
+import { RcFile } from "antd/lib/upload";
+
 type propTypes = {
   visible: boolean;
-  setVisible: any;
-  user: any;
+  setVisible: (value: boolean) => void;
+  user: User;
 };
 
 export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
   const [loading, setLoading] = useState(false);
   const formData = new FormData();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [userInput, setUserInput] = useState({
     name: user?.name,
     bio: user?.bio,
@@ -25,7 +28,7 @@ export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
     website: user?.website,
   });
 
-  const beforeUpload = (file: any) => {
+  const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
@@ -58,7 +61,7 @@ export const EditUserModal = ({ visible, setVisible, user }: propTypes) => {
       visible={visible}
       onOk={onFinish}
       confirmLoading={loading}
-      onCancel={() => setVisible((v: boolean) => !v)}
+      onCancel={() => setVisible(false)}
       okText="Save Changes"
     >
       <img

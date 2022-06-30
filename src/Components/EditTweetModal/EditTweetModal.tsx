@@ -2,8 +2,9 @@ import { Avatar, Button, message, Modal, Space, Upload } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { editTweet } from "app/features";
+import { useAppDispatch, useAppSelector } from "app/store";
+import { RcFile } from "antd/lib/upload";
 
 type editTweetModal = {
   closeModal: () => void;
@@ -18,13 +19,13 @@ export const EditTweetModal = ({
   tweetId,
   description,
 }: editTweetModal) => {
-  const authUser = useSelector((state: any) => state.auth.user);
-  const editing = useSelector((state: any) => state.tweets.editing);
-  const [tweet, setTweet] = useState(description);
-  const dispatch = useDispatch();
+  const authUser = useAppSelector((state) => state.auth.user);
+  const editing = useAppSelector((state) => state.tweets.editing);
+  const [tweet, setTweet] = useState<string>(description);
+  const dispatch = useAppDispatch();
   const formData = new FormData();
 
-  const beforeUpload = (file: any) => {
+  const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");

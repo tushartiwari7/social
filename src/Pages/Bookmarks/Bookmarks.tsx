@@ -1,9 +1,10 @@
 import { List } from "antd";
+import { Tweet } from "app/features/Tweet/tweet.types";
+import { useAppSelector } from "app/store";
 import { ListItem } from "Components";
-import { useSelector } from "react-redux";
 
 export const Bookmarks = () => {
-  const bookmarks = useSelector((state: any) => state.bookmarks);
+  const bookmarks = useAppSelector((state) => state.bookmarks);
   return (
     <List
       itemLayout="vertical"
@@ -11,7 +12,9 @@ export const Bookmarks = () => {
       className="tweet-list"
       style={{ overflow: "auto", flexGrow: 1 }}
       dataSource={bookmarks}
-      renderItem={(item: any) => <ListItem {...item.post} key={item?._id} />}
+      renderItem={(item) => (
+        <ListItem {...(item.post as Tweet)} key={item?._id} />
+      )}
     ></List>
   );
 };

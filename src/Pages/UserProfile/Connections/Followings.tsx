@@ -1,34 +1,38 @@
 import { List } from "antd";
 import { getFollowings } from "app/features";
+import { User } from "app/features/Auth/authSlice.types";
+import { useAppDispatch } from "app/store";
 import { UserCard } from "Components";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 
 type props = {
-  userId: string;
+  userId: string | undefined;
 };
+
 export const Followings = ({ userId }: props) => {
-  const [list, setList] = useState([]);
-  const dispatch = useDispatch();
+  const [list, setList] = useState<User[]>([]);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    (async () => {
-      const resp = await dispatch(getFollowings(userId));
-      setList(resp.payload);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (userId) {
+      (async (id) => {
+        const followerList = await dispatch(getFollowings(id)).unwrap();
+        setList(followerList);
+      })(userId);
+    }
+  }, [dispatch, userId]);
 
   return (
     <List
       itemLayout="horizontal"
       dataSource={list}
+      loading={!list.length}
       style={{
         border: "1px solid var(--bg-color)",
         borderRadius: "15px",
         margin: "0 5px",
         padding: "1rem",
       }}
-      renderItem={(item: any) => <UserCard person={item} />}
+      renderItem={(item) => <UserCard person={item} />}
     />
   );
 };

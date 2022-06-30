@@ -1,44 +1,48 @@
-import { FC, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader, Radio, Typography } from "antd";
 import { sort } from "app/features";
+import { useAppDispatch, useAppSelector } from "app/store";
+import { MyLocation } from "helpers.types";
 
-export const Header: FC = () => {
-  const location: any = useLocation();
+export const Header = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const path: string = location.pathname;
-  const urlParams: string[] = path.split("/");
+  const dispatch = useAppDispatch();
+  const path = location.pathname;
+  const urlParams = path.split("/");
   const source = urlParams[urlParams.length - 1] ?? "";
-  const dispatch = useDispatch();
-  const [defaultValue, setDefaultValue] = useState("");
-  const users = useSelector((state: any) => state.users);
+  const [defaultValue, setDefaultValue] = useState<
+    "Trending" | "Oldest" | "Latest" | ""
+  >("");
+  const users = useAppSelector((state) => state.users);
   const user =
     source.length > 15
-      ? users.find((user: any) => user._id === source)
-      : users.find((user: any) => user.username === source);
+      ? users.find((user) => user?._id === source)
+      : users.find((user) => user?.username === source);
 
   const getTitle = () => {
     if (urlParams.length > 3 && urlParams.includes("tweet")) return "Tweet";
     else return user?.name ?? (urlParams[urlParams.length - 1] || "Home");
   };
 
+  const locationState = location.state as MyLocation;
+
   useEffect(() => {
     return () => setDefaultValue("");
   }, [location.pathname]);
 
-  const from: string = location.state?.from?.pathname ?? "";
   return (
     <PageHeader
       className="site-page-header"
-      onBack={() => navigate(from)}
+      onBack={() => navigate(locationState ? locationState.from.pathname : "/")}
       title={getTitle()}
       extra={
-        location.pathname === "/" ||
-        location.pathname === "/Home" ||
-        (location.pathname.split("/")[1] === "u" &&
-          location.pathname.split("/").length <= 3) ||
-        location.pathname === "/Explore" ? (
+        (location.pathname === "/" ||
+          location.pathname === "/Home" ||
+          location.pathname === "/Explore" ||
+          (location.pathname.split("/")[1] === "u" &&
+            location.pathname.split("/").length <= 3)) && (
           <>
             <Typography.Text> Sort By:</Typography.Text>
             <Radio.Group
@@ -53,7 +57,7 @@ export const Header: FC = () => {
               <Radio.Button value="Oldest">Oldest</Radio.Button>
             </Radio.Group>
           </>
-        ) : null
+        )
       }
     />
   );

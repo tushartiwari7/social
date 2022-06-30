@@ -1,33 +1,34 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Form, Input, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { getAllUsers, getBookmarks, login } from "app/features";
-import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "app/store";
+import { loginData } from "app/features/Auth/authSlice.types";
 import "./Login.css";
 
-export const Login: FC = () => {
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+export const Login = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const onFinish = async (values: any) => {
+
+  const onFinish = async (values: loginData) => {
     setLoading(true);
     try {
-      await Promise.all([
-        dispatch(login(values)),
-        dispatch(getAllUsers()),
-        dispatch(getBookmarks()),
-      ]);
-      navigate("/");
-      message.success("Logged in successfully");
-    } catch (error) {
+      const user = await dispatch(login(values)).unwrap();
+      if (user?._id) {
+        await Promise.all([dispatch(getAllUsers()), dispatch(getBookmarks())]);
+        navigate("/");
+        message.success("Logged in successfully");
+      }
+    } catch (_) {
       message.error("Oops!, Login Failed.");
     }
     setLoading(false);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    message.error("Failed", errorInfo);
+  const onFinishFailed = () => {
+    message.error("Failed to send Login Request.");
   };
 
   return (
@@ -83,8 +84,10 @@ export const Login: FC = () => {
               href="#"
               onClick={() => {
                 onFinish({
-                  email: process.env.REACT_APP_GUEST_MAIL,
-                  password: process.env.REACT_APP_GUEST_PASSWORD,
+                  email:
+                    process.env.REACT_APP_GUEST_MAIL || "guestuser@gmail.com",
+                  password:
+                    process.env.REACT_APP_GUEST_PASSWORD || "PBQeApy1D5",
                 });
               }}
             >
